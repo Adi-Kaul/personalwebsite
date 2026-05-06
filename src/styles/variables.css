@@ -1,0 +1,91 @@
+:root {
+  /* Extracted from abpartners.co, then mapped to the requested stack. */
+  --slide-transition-duration: 0.8s;
+  --slide-transition-ease: power2.inOut;
+
+  /* Typography */
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --text-hero: clamp(3.2rem, 6vw, 6.5rem);
+  --text-wordmark: 14px;
+  --wordmark-tracking: 0.08em;
+
+  /* Slide colors */
+  --slide-1-bg: #fcf0da;
+  --slide-2-bg: #25212e;
+  --slide-3-bg: #ffd3a6;
+  --slide-4-bg: #245a52;
+  --slide-5-bg: #efae37;
+
+  /* Per-slide foreground color */
+  --slide-1-fg: #25212e;
+  --slide-2-fg: #fcf0da;
+  --slide-3-fg: #25212e;
+  --slide-4-fg: #d1e5e3;
+  --slide-5-fg: #25212e;
+
+  --slide-1-fg-rgb: 37, 33, 46;
+  --slide-2-fg-rgb: 252, 240, 218;
+  --slide-3-fg-rgb: 37, 33, 46;
+  --slide-4-fg-rgb: 209, 229, 227;
+  --slide-5-fg-rgb: 37, 33, 46;
+
+  /* Divider */
+  --divider-color: #fcf0da;
+  --divider-width: 100%;
+  --divider-thickness: 4px;
+
+  /* Site tokens */
+  --color-purple: #25212e;
+  --color-tan: #fcf0da;
+  --color-orange: #cc502e;
+  --color-orange-light: #ffd3a6;
+  --color-green: #245a52;
+  --color-green-light: #d1e5e3;
+  --color-border-light: rgba(37, 33, 46, 0.18);
+  --color-border-dark: rgba(252, 240, 218, 0.28);
+  --color-muted-dark: rgba(37, 33, 46, 0.68);
+  --color-muted-light: rgba(252, 240, 218, 0.72);
+
+  --space-page-x: clamp(1.5rem, 6vw, 6.5rem);
+  --space-page-y: clamp(5rem, 9vw, 8rem);
+  --radius-card: 8px;
+  --z-fixed: 100;
+}
+
+@media (min-width: 992px) {
+  :root {
+    --divider-thickness: 6px;
+  }
+}
+
+body[data-slide="0"] {
+  --current-slide-fg: var(--slide-1-fg);
+  --current-slide-fg-rgb: var(--slide-1-fg-rgb);
+  --current-slide-bg: var(--slide-1-bg);
+}
+
+body[data-slide="1"] {
+  --current-slide-fg: var(--slide-2-fg);
+  --current-slide-fg-rgb: var(--slide-2-fg-rgb);
+  --current-slide-bg: var(--slide-2-bg);
+}
+
+body[data-slide="2"] {
+  --current-slide-fg: var(--slide-3-fg);
+  --current-slide-fg-rgb: var(--slide-3-fg-rgb);
+  --current-slide-bg: var(--slide-3-bg);
+}
+
+body[data-slide="3"] {
+  --current-slide-fg: var(--slide-4-fg);
+  --current-slide-fg-rgb: var(--slide-4-fg-rgb);
+  --current-slide-bg: var(--slide-4-bg);
+}
+
+body[data-slide="4"] {
+  --current-slide-fg: var(--slide-5-fg);
+  --current-slide-fg-rgb: var(--slide-5-fg-rgb);
+  --current-slide-bg: var(--slide-5-bg);
+}
