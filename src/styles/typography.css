@@ -33,6 +33,12 @@ p {
   letter-spacing: 0;
 }
 
+.hero-title--home {
+  max-width: min(1120px, 90vw);
+  font-size: clamp(5rem, 13vw, 13rem);
+  line-height: 0.88;
+}
+
 .hero-title__line {
   display: block;
   font-weight: 400;

@@ -27,33 +27,33 @@ export default function IntroCurtain({ onDone }: IntroCurtainProps) {
         animate={{ y: "-101%" }}
         className="intro-curtain__panel intro-curtain__panel--top"
         initial={{ y: "0%" }}
-        transition={{ delay: 1.82, duration: 0.95, ease: [0.83, 0, 0.17, 1] }}
+        transition={{ delay: 1.2, duration: 0.72, ease: [0.83, 0, 0.17, 1] }}
       />
       <motion.div
         animate={{ y: "101%" }}
         className="intro-curtain__panel intro-curtain__panel--bottom"
         initial={{ y: "0%" }}
         onAnimationComplete={onDone}
-        transition={{ delay: 1.82, duration: 0.95, ease: [0.83, 0, 0.17, 1] }}
+        transition={{ delay: 1.2, duration: 0.72, ease: [0.83, 0, 0.17, 1] }}
       />
       <motion.div
         animate={{ opacity: [0, 1, 1, 0] }}
         className="intro-curtain__mark"
         initial={{ opacity: 0 }}
-        transition={{ duration: 1.75, ease: "easeOut", times: [0, 0.17, 0.82, 1] }}
+        transition={{ duration: 1.18, ease: "easeOut", times: [0, 0.16, 0.84, 1] }}
       >
         <motion.span
           animate={{ scaleX: 1 }}
           className="intro-curtain__line-half intro-curtain__line-half--left"
           initial={{ scaleX: 0 }}
-          transition={{ delay: 0.5, duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.36, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
         />
         <span className="intro-curtain__name">Adi Kaul</span>
         <motion.span
           animate={{ scaleX: 1 }}
           className="intro-curtain__line-half intro-curtain__line-half--right"
           initial={{ scaleX: 0 }}
-          transition={{ delay: 0.5, duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.36, duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
         />
       </motion.div>
     </div>

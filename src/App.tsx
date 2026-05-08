@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Wordmark from "./components/Wordmark";
 
 const initialPathname = window.location.pathname;
 
@@ -24,7 +23,6 @@ function AnimatedRoutes() {
 
   return (
     <>
-      {location.pathname === "/" ? <Wordmark /> : null}
       <AnimatePresence mode="wait">
         <Suspense fallback={<div className="route-loading">Loading</div>}>
           <Routes location={location} key={location.pathname}>
