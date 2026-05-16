@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { projects } from "../../data/projects";
 
 export default function ProjectsPage() {
@@ -23,12 +23,11 @@ export default function ProjectsPage() {
       <Link className="back-link" to="/">
         &lt;- Adi Kaul
       </Link>
-      <section className="projects-showcase" aria-label="All projects">
+      <section className="projects-showcase" aria-label="My projects">
         <div className="projects-showcase__list">
-          <p className="projects-showcase__eyebrow">All projects</p>
-          <h1>Selected work</h1>
+          <h1>My Projects</h1>
           <div className="project-index">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <Link
                 aria-current={project.slug === activeProject?.slug ? "true" : undefined}
                 className="project-index__item"
@@ -37,69 +36,50 @@ export default function ProjectsPage() {
                 onMouseEnter={() => setActiveSlug(project.slug)}
                 to={`/projects/${project.slug}`}
               >
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span aria-hidden="true" />
                 <strong>{project.name}</strong>
               </Link>
             ))}
           </div>
         </div>
 
-        {activeProject ? (
-          <motion.aside
-            animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-            className="project-preview"
-            initial={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 12 }}
-            key={activeProject.slug}
-            transition={{ duration: reducedMotion ? 0 : 0.28, ease: "easeOut" }}
-          >
-            <div className="project-preview__media" aria-label={`Preview images for ${activeProject.name}`}>
-              <div className="project-preview__image project-preview__image--primary">
-                <span>{activeProject.name}</span>
+        <AnimatePresence mode="wait">
+          {activeProject ? (
+            <motion.aside
+              animate={{ opacity: 1 }}
+              className="project-preview"
+              exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              key={activeProject.slug}
+              transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }}
+            >
+              <div className="project-preview__media" aria-label={`Preview images for ${activeProject.name}`}>
+                <div className="project-preview__image project-preview__image--primary" />
+                <div className="project-preview__stack">
+                  <div className="project-preview__image project-preview__image--secondary" />
+                  <div className="project-preview__image project-preview__image--tertiary" />
+                </div>
               </div>
-              <div className="project-preview__stack">
-                <div className="project-preview__image project-preview__image--secondary" />
-                <div className="project-preview__image project-preview__image--tertiary" />
-              </div>
-            </div>
-            <div className="project-preview__body">
-              <p className="project-preview__meta">
-                {activeProject.year} / {activeProject.language}
-              </p>
-              <h2>{activeProject.name}</h2>
-              <p>{activeProject.description}</p>
-              <div className="project-preview__topics">
-                {activeProject.topics.map((topic) => (
-                  <span className="topic-pill" key={topic}>
-                    {topic}
-                  </span>
-                ))}
-              </div>
-              <div className="project-preview__actions">
-                <Link className="text-button" to={`/projects/${activeProject.slug}`}>
-                  Project notes
-                </Link>
-                <a
-                  className="text-button"
-                  href={activeProject.githubUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  GitHub
-                </a>
-                {activeProject.demoUrl ? (
+              <div className="project-preview__body">
+                <p className="project-preview__meta">
+                  {activeProject.year} / {activeProject.language}
+                </p>
+                <div className="project-preview__heading">
+                  <h2>{activeProject.name}</h2>
                   <a
-                    className="text-button"
-                    href={activeProject.demoUrl}
+                    className="project-preview__github"
+                    href={activeProject.githubUrl}
                     rel="noreferrer"
                     target="_blank"
                   >
-                    Live demo
+                    GitHub
                   </a>
-                ) : null}
+                </div>
+                <p>{activeProject.description}</p>
               </div>
-            </div>
-          </motion.aside>
-        ) : null}
+            </motion.aside>
+          ) : null}
+        </AnimatePresence>
       </section>
     </motion.main>
   );
