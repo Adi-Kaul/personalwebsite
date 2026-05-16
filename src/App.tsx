@@ -1,11 +1,9 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import Landing from "./pages/Landing";
 
-const initialPathname = window.location.pathname;
-
-const Landing = lazy(() => import("./pages/Landing"));
 const ProjectsPage = lazy(() => import("./pages/projects/ProjectsPage"));
 const ProjectDetail = lazy(() => import("./pages/projects/ProjectDetail"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
@@ -14,8 +12,6 @@ const RecentlyPage = lazy(() => import("./pages/RecentlyPage"));
 
 function AnimatedRoutes() {
   const location = useLocation();
-  const [hasPlayedLandingIntro, setHasPlayedLandingIntro] = useState(false);
-  const shouldPlayLandingIntro = initialPathname === "/" && !hasPlayedLandingIntro;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0 });
@@ -24,17 +20,9 @@ function AnimatedRoutes() {
   return (
     <>
       <AnimatePresence mode="wait">
-        <Suspense fallback={<div className="route-loading">Loading</div>}>
+        <Suspense fallback={null}>
           <Routes location={location} key={location.pathname}>
-            <Route
-              path="/"
-              element={
-                <Landing
-                  playIntro={shouldPlayLandingIntro}
-                  onIntroComplete={() => setHasPlayedLandingIntro(true)}
-                />
-              }
-            />
+            <Route path="/" element={<Landing />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/about" element={<AboutPage />} />

@@ -1,6 +1,5 @@
 import DotNav from "../components/DotNav";
 import ContactLinks from "../components/ContactLinks";
-import IntroCurtain from "../components/IntroCurtain";
 import { useSlideManager } from "../hooks/useSlideManager";
 import Slide1Home from "./slides/Slide1Home";
 import Slide2Projects from "./slides/Slide2Projects";
@@ -10,12 +9,7 @@ import Slide5Recently from "./slides/Slide5Recently";
 
 const SLIDE_COUNT = 5;
 
-interface LandingProps {
-  playIntro?: boolean;
-  onIntroComplete?: () => void;
-}
-
-export default function Landing({ playIntro = false, onIntroComplete }: LandingProps) {
+export default function Landing() {
   const { containerRef, currentIndex, goToSlide } = useSlideManager({
     slideCount: SLIDE_COUNT
   });
@@ -37,7 +31,6 @@ export default function Landing({ playIntro = false, onIntroComplete }: LandingP
           <Slide1Home />
         </div>
       </div>
-      {playIntro ? <IntroCurtain onDone={onIntroComplete ?? (() => undefined)} /> : null}
     </main>
   );
 }
