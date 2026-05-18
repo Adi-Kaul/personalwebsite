@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import SilkRingsInteractive from "../../components/SilkRingsInteractive";
 import { projects } from "../../data/projects";
 
 const featuredProjectDetails: Record<string, { summary: string; builtWith: string[] }> = {
@@ -30,6 +31,7 @@ export default function Slide2Projects() {
 
   return (
     <section className="slide slide--two" aria-label="Projects">
+      <SilkRingsInteractive className="silk-rings-gradient" />
       <div className="slide__inner">
         <div className="slide__content slide__content--projects">
           <div className="project-slide__intro">

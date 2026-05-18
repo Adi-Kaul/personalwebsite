@@ -140,9 +140,27 @@ body[data-slide="0"] .landing {
 }
 
 .slide--two {
-  --slide-bg: var(--slide-2-bg);
+  --slide-bg: #1c0a34;
   --slide-fg: var(--slide-2-fg);
   --current-slide-fg-rgb: var(--slide-2-fg-rgb);
+}
+
+.silk-rings-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.slide--two::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(circle at 72% 22%, rgba(220, 100, 200, 0.1), transparent 30%),
+    linear-gradient(90deg, rgba(28, 10, 52, 0.18), rgba(28, 10, 52, 0.46));
 }
 
 .slide--three {
