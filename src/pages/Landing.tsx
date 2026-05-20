@@ -7,13 +7,22 @@ import Slide3About from "./slides/Slide3About";
 
 const SLIDE_COUNT = 3;
 
-export default function Landing() {
+interface LandingProps {
+  isVisible?: boolean;
+}
+
+export default function Landing({ isVisible = true }: LandingProps) {
   const { containerRef, currentIndex, goToSlide } = useSlideManager({
     slideCount: SLIDE_COUNT
   });
 
   return (
-    <main className="landing" ref={containerRef} aria-label="Adi Kaul landing slides">
+    <main
+      aria-hidden={!isVisible}
+      aria-label="Adi Kaul landing slides"
+      className={`landing${isVisible ? "" : " landing--parked"}`}
+      ref={containerRef}
+    >
       <DotNav currentIndex={currentIndex} goToSlide={goToSlide} slideCount={SLIDE_COUNT} />
       <ContactLinks />
       <div id="slides-track">

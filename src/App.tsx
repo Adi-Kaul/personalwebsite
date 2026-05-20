@@ -12,25 +12,30 @@ const RecentlyPage = lazy(() => import("./pages/RecentlyPage"));
 
 function AnimatedRoutes() {
   const location = useLocation();
+  const isLanding = location.pathname === "/";
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0 });
-  }, [location.pathname]);
+    if (!isLanding) {
+      window.scrollTo({ top: 0, left: 0 });
+    }
+  }, [isLanding, location.pathname]);
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        <Suspense fallback={null}>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Landing />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/projects/:slug" element={<ProjectDetail />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/experience" element={<ExperiencePage />} />
-            <Route path="/recently" element={<RecentlyPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
+      <Landing isVisible={isLanding} />
+      <AnimatePresence mode="sync">
+        {!isLanding ? (
+          <Suspense fallback={null}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/projects/:slug" element={<ProjectDetail />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/experience" element={<ExperiencePage />} />
+              <Route path="/recently" element={<RecentlyPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        ) : null}
       </AnimatePresence>
     </>
   );

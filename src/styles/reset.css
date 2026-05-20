@@ -10,13 +10,22 @@ body,
   min-height: 100%;
 }
 
+body,
+#root {
+  min-height: 100dvh;
+}
+
 html {
   background: var(--color-tan);
+  overflow-x: hidden;
+  scrollbar-width: none;
   scroll-behavior: auto;
 }
 
 body {
   margin: 0;
+  overflow-x: hidden;
+  scrollbar-width: none;
   color: var(--current-slide-fg, var(--color-purple));
   background: var(--current-slide-bg, var(--color-tan));
   font-family: var(--font-sans);
@@ -24,6 +33,16 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+#root {
+  background: var(--current-slide-bg, var(--color-tan));
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 button,

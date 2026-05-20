@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { marked } from "marked";
 import { motion, useReducedMotion } from "framer-motion";
 import { projects } from "../../data/projects";
+import LandingBackLink from "../../components/LandingBackLink";
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -22,13 +23,11 @@ export default function ProjectDetail() {
     <motion.main
       animate={{ opacity: 1, y: 0 }}
       className="subpage subpage--project-detail"
-      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 0 }}
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: reducedMotion ? 0 : 0.5, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
-      <Link className="back-link" to="/">
-        &lt;- Adi Kaul
-      </Link>
+      <LandingBackLink slideIndex={1} />
       <div className="page-header">
         <p className="breadcrumb">adi-kaul / {project.name}</p>
         <h1>{project.name}</h1>

@@ -84,6 +84,29 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
     document.body.dataset.edgeRightSlide = String(rightIndex);
   }, []);
 
+  const jumpTo = useCallback(
+    (index: number) => {
+      const nextIndex = wrapIndex(index, slideCount);
+      const track = document.querySelector<HTMLElement>("#slides-track");
+
+      if (animationTimeoutRef.current !== null) {
+        window.clearTimeout(animationTimeoutRef.current);
+        animationTimeoutRef.current = null;
+      }
+
+      isAnimatingRef.current = false;
+      currentIndexRef.current = nextIndex;
+      setCurrentIndex(nextIndex);
+      setBodySlide(nextIndex);
+      setEdgeSlides(nextIndex);
+
+      if (track) {
+        setTrackOffset(track, visualIndexFor(nextIndex), false);
+      }
+    },
+    [setBodySlide, setEdgeSlides, slideCount]
+  );
+
   const animateTo = useCallback(
     (index: number) => {
       const nextIndex = wrapIndex(index, slideCount);
@@ -249,14 +272,21 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
       animateTo(customEvent.detail);
     }
 
+    function handleExternalImmediateJump(event: Event) {
+      const customEvent = event as CustomEvent<number>;
+      jumpTo(customEvent.detail);
+    }
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("slide:goTo", handleExternalJump);
+    window.addEventListener("slide:setImmediate", handleExternalImmediateJump);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("slide:goTo", handleExternalJump);
+      window.removeEventListener("slide:setImmediate", handleExternalImmediateJump);
     };
-  }, [animateTo]);
+  }, [animateTo, jumpTo]);
 
   return {
     containerRef,

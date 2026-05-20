@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { projects } from "../../data/projects";
+import LandingBackLink from "../../components/LandingBackLink";
 
 export default function ProjectsPage() {
   const reducedMotion = useReducedMotion();
@@ -16,13 +17,11 @@ export default function ProjectsPage() {
     <motion.main
       animate={{ opacity: 1, y: 0 }}
       className="subpage subpage--projects"
-      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 0 }}
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: reducedMotion ? 0 : 0.5, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
-      <Link className="back-link" to="/">
-        &lt;- Adi Kaul
-      </Link>
+      <LandingBackLink slideIndex={1} />
       <section className="projects-showcase" aria-label="My projects">
         <div className="projects-showcase__list">
           <h1>My Projects</h1>
