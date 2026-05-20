@@ -9,55 +9,71 @@ const reveal = {
 };
 
 const heroPhotos = [
-  { className: "about-photo-card--primary", label: "Adi portrait photo" },
-  { className: "about-photo-card--secondary", label: "Adi working photo" },
-  { className: "about-photo-card--tertiary", label: "Adi campus photo" },
-  { className: "about-photo-card--small", label: "Adi project photo" }
+  {
+    className: "about-photo-card--primary",
+    label: "Adi Kaul headshot",
+    src: "/images/adi-headshot.jpg"
+  },
+  {
+    className: "about-photo-card--secondary",
+    label: "Michigan Stadium photo",
+    src: "/images/umich-football.jpg"
+  },
+  {
+    className: "about-photo-card--tertiary",
+    label: "Jellyfish aquarium photo",
+    src: "/images/jelly.jpg"
+  },
+  {
+    className: "about-photo-card--small",
+    label: "Rocky sea coast photo",
+    src: "/images/the-sea.jpg"
+  }
 ];
 
 const strengths = [
-  "Product-minded engineering",
-  "Fast learning",
-  "Clean visual taste",
-  "Frontend polish",
-  "Systems thinking",
-  "Clear communication"
+  "Python",
+  "C++",
+  "Web Development (React, JavaScript)",
+  "App Development (Flutter / Dart)",
+  "Firebase",
+  "Git"
 ];
 
 const interests = [
   {
-    title: "Interactive web apps",
-    description: "Interfaces that feel quick, intentional, and genuinely useful.",
+    title: "UI/UX Design",
+    description: "Clear interfaces, thoughtful flows, and details that make products easier to use.",
     imageClass: "interest-preview--web"
   },
   {
-    title: "Creative coding and motion",
-    description: "Motion, layout, and small interactions that give software personality.",
+    title: "Tech Consulting",
+    description: "Understanding messy needs and turning them into practical technical direction.",
     imageClass: "interest-preview--motion"
   },
   {
-    title: "AI-assisted workflows",
-    description: "Tools that turn scattered thoughts into practical next steps.",
+    title: "Startups and building from Zero",
+    description: "Early product decisions, fast iteration, and making useful things real.",
     imageClass: "interest-preview--ai"
   },
   {
-    title: "Clean systems and thoughtful interfaces",
-    description: "Readable code, calm structure, and products that make sense quickly.",
+    title: "Agentic Systems",
+    description: "Software that can reason, act, and help people move through complex work.",
     imageClass: "interest-preview--systems"
   },
   {
-    title: "Developer tools",
-    description: "Small utilities that remove friction and help people move faster.",
+    title: "Snowboarding",
+    description: "Getting outside, moving fast, and finding rhythm in something physical.",
     imageClass: "interest-preview--tools"
   },
   {
-    title: "Product design",
-    description: "Turning rough ideas into clear flows, strong defaults, and polished details.",
+    title: "Bouldering",
+    description: "Problem solving through movement, patience, and small improvements.",
     imageClass: "interest-preview--product"
   },
   {
-    title: "Startups and building from zero",
-    description: "Early product decisions, fast iteration, and making useful things real.",
+    title: "Photography",
+    description: "Composition, light, and noticing the small moments worth keeping.",
     imageClass: "interest-preview--startups"
   }
 ];
@@ -96,9 +112,8 @@ export default function AboutPage() {
           <p className="about-hero__eyebrow">About</p>
           <h1>I'm Adi.</h1>
           <p className="about-hero__intro">
-            I am a Computer Science major at the University of Michigan who likes building
-            thoughtful, useful software: the kind where the interface, the system, and the idea all
-            feel like they belong together.
+            I am a Computer Science major at the University of Michigan interested in building
+            purposeful software that blends human-centered design with AI to improve people's lives.
           </p>
         </motion.div>
         <motion.div
@@ -114,11 +129,20 @@ export default function AboutPage() {
         >
           {heroPhotos.map((photo) => (
             <div
-              aria-label={photo.label}
               className={`about-photo-card ${photo.className}`}
               key={photo.className}
-              role="img"
-            />
+              {...(photo.src ? {} : { "aria-label": photo.label, role: "img" as const })}
+            >
+              {photo.src ? (
+                <img
+                  alt={photo.label}
+                  className="about-photo-card__image"
+                  height="1200"
+                  src={photo.src}
+                  width="900"
+                />
+              ) : null}
+            </div>
           ))}
         </motion.div>
       </header>
@@ -127,18 +151,19 @@ export default function AboutPage() {
         <article className="about-split__panel">
           <h2>What I like building</h2>
           <p className="body-copy">
-            I am drawn to development that turns messy ideas into clean, working products. I like
-            frontend engineering because every detail matters: the structure of the code, the rhythm
-            of an interaction, and the small visual decisions that make something feel intuitive.
+            I like building things that start from real problems, especially the small frustrations
+            people run into every day. Recently, I have been especially drawn to products centered
+            around AI, not just AI added onto existing software. I am interested in exploring how AI
+            can reshape the way people learn, work, create, and solve everyday problems.
           </p>
           <p className="body-copy">
-            I am especially interested in interactive web apps, developer tools, product engineering,
-            and systems that make everyday work feel lighter. The sweet spot for me is where design
-            taste and technical execution meet.
+            Ultimately, what I care about most is building with purpose. I want the things I make to feel
+            thoughtful, practical, and genuinely useful, while pushing toward a future where software
+            makes people more capable.
           </p>
         </article>
         <article className="about-split__panel">
-          <h2>Strengths</h2>
+          <h2>Skills</h2>
           <ul className="about-strength-list">
             {strengths.map((strength) => (
               <li key={strength}>{strength}</li>

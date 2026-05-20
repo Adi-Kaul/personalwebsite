@@ -11,7 +11,7 @@ const PRESET = {
     [60, 195, 220],
     [120, 220, 235]
   ],
-  speed: 0.7,
+  speed: 0.91,
   scale: 1.4,
   voids: 0.05,
   grain: 0.7

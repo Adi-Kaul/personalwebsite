@@ -3,7 +3,7 @@ import { CSSProperties, useEffect, useRef } from "react";
 const PRESET = {
   bg: [28, 10, 52],
   ringColor: [220, 100, 200],
-  speed: 0.25,
+  speed: 0.325,
   scale: 1.4,
   grain: 0.7,
   ringFreq: 2.8,
