@@ -42,39 +42,28 @@ const strengths = [
 
 const interests = [
   {
-    title: "UI/UX Design",
-    description: "Clear interfaces, thoughtful flows, and details that make products easier to use.",
-    imageClass: "interest-preview--web"
-  },
-  {
     title: "Tech Consulting",
-    description: "Understanding messy needs and turning them into practical technical direction.",
-    imageClass: "interest-preview--motion"
-  },
-  {
-    title: "Startups and building from Zero",
-    description: "Early product decisions, fast iteration, and making useful things real.",
-    imageClass: "interest-preview--ai"
-  },
-  {
-    title: "Agentic Systems",
-    description: "Software that can reason, act, and help people move through complex work.",
-    imageClass: "interest-preview--systems"
+    description: "A final client presentation with my Tech Plus Consulting team at UofM, where I served as Senior Technical Analyst.",
+    imageClass: "interest-preview--motion",
+    imageSrc: "/images/interest-consulting.png"
   },
   {
     title: "Snowboarding",
-    description: "Getting outside, moving fast, and finding rhythm in something physical.",
-    imageClass: "interest-preview--tools"
+    description: "Growing up around Vancouver spoiled me with mountains to choose from; Cypress is still my favorite.",
+    imageClass: "interest-preview--tools",
+    imageSrc: "/images/interest-snowboarding.jpg"
   },
   {
     title: "Bouldering",
-    description: "Problem solving through movement, patience, and small improvements.",
-    imageClass: "interest-preview--product"
+    description: "I usually climb indoors, but this was my first time trying outdoor bouldering in Squamish.",
+    imageClass: "interest-preview--product",
+    imageSrc: "/images/interest-bouldering.jpg"
   },
   {
     title: "Photography",
-    description: "Composition, light, and noticing the small moments worth keeping.",
-    imageClass: "interest-preview--startups"
+    description: "I shoot with a Nikon AF-P DX Nikkor. This is a yellow eyelash viper I photographed at the San Diego Zoo.",
+    imageClass: "interest-preview--startups",
+    imageSrc: "/images/interest-photography.jpg"
   }
 ];
 
@@ -173,7 +162,7 @@ export default function AboutPage() {
       <motion.section className="content-section about-section about-interests" {...(reducedMotion ? {} : reveal)}>
         <div className="about-interest-layout">
           <div>
-            <h2>Interests</h2>
+            <h2>Other Interests</h2>
             <ul className="interest-list" aria-label="Interest image selector">
               {interests.map((interest, index) => (
                 <li key={interest.title}>
@@ -200,10 +189,21 @@ export default function AboutPage() {
               transition={{ duration: reducedMotion ? 0 : 0.28, ease: "easeOut" }}
             >
               <div
-                aria-label={`${selectedInterest.title} visual`}
-                className="interest-preview__image"
-                role="img"
-              />
+                className={`interest-preview__image${selectedInterest.imageSrc ? " interest-preview__image--photo" : ""}`}
+                {...(selectedInterest.imageSrc
+                  ? {}
+                  : { "aria-label": `${selectedInterest.title} visual`, role: "img" as const })}
+              >
+                {selectedInterest.imageSrc ? (
+                  <img
+                    alt={`${selectedInterest.title} visual`}
+                    className="interest-preview__photo"
+                    height="1200"
+                    src={selectedInterest.imageSrc}
+                    width="1800"
+                  />
+                ) : null}
+              </div>
               <figcaption>
                 <strong>{selectedInterest.title}</strong>
                 <span>{selectedInterest.description}</span>

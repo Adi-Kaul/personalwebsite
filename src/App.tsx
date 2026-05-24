@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
@@ -13,6 +13,8 @@ const RecentlyPage = lazy(() => import("./pages/RecentlyPage"));
 function AnimatedRoutes() {
   const location = useLocation();
   const isLanding = location.pathname === "/";
+  const previousPathRef = useRef(location.pathname);
+  const [landingReturnToken, setLandingReturnToken] = useState(0);
 
   useEffect(() => {
     if (!isLanding) {
@@ -20,9 +22,22 @@ function AnimatedRoutes() {
     }
   }, [isLanding, location.pathname]);
 
+  useEffect(() => {
+    const previousPath = previousPathRef.current;
+    previousPathRef.current = location.pathname;
+
+    if (previousPath !== "/" && location.pathname === "/") {
+      setLandingReturnToken((token) => token + 1);
+      document.body.dataset.landingReturning = "true";
+      window.setTimeout(() => {
+        delete document.body.dataset.landingReturning;
+      }, 620);
+    }
+  }, [location.pathname]);
+
   return (
     <>
-      <Landing isVisible={isLanding} />
+      <Landing isVisible={isLanding} returnToken={landingReturnToken} />
       <AnimatePresence mode="sync">
         {!isLanding ? (
           <Suspense fallback={null}>

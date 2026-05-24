@@ -15,18 +15,75 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    // TODO: replace with a real project.
+    // TODO: replace with real project details.
+    slug: "step-ai",
+    name: "Step.ai",
+    description: "An AI-centered product concept focused on helping people move through tasks one clear step at a time.",
+    language: "Python",
+    languageColor: "#3572A5",
+    stars: 0,
+    forks: 0,
+    topics: ["ai", "product", "workflow"],
+    githubUrl: "https://github.com/Adi-Kaul/step-ai",
+    readme: `# Step.ai
+
+TODO: replace this README with real project notes.
+
+Step.ai is an AI-centered product concept focused on making complex work feel clearer, more guided, and easier to act on.
+`,
+    year: 2026
+  },
+  {
+    // TODO: replace with real project details.
+    slug: "scopeplus",
+    name: "ScopePlus",
+    description: "A practical tool concept for scoping projects, clarifying requirements, and keeping teams aligned.",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    stars: 0,
+    forks: 0,
+    topics: ["planning", "product", "teams"],
+    githubUrl: "https://github.com/Adi-Kaul/scopeplus",
+    readme: `# ScopePlus
+
+TODO: replace this README with real project notes.
+
+ScopePlus explores how lightweight software can help projects start with clearer goals, constraints, and decisions.
+`,
+    year: 2026
+  },
+  {
+    // TODO: replace with real project details.
+    slug: "frattrack",
+    name: "FratTrack",
+    description: "A campus-focused app concept for organizing fraternity events, communication, and member workflows.",
+    language: "Dart",
+    languageColor: "#00B4AB",
+    stars: 0,
+    forks: 0,
+    topics: ["flutter", "firebase", "campus"],
+    githubUrl: "https://github.com/Adi-Kaul/frattrack",
+    readme: `# FratTrack
+
+TODO: replace this README with real project notes.
+
+FratTrack is a mobile-first concept for making fraternity logistics easier to manage and easier for members to follow.
+`,
+    year: 2026
+  },
+  {
+    // TODO: replace with real project details.
     slug: "personalwebsite",
-    name: "personalwebsite",
-    description: "A horizontal portfolio built with React, GSAP, and a quiet editorial system.",
+    name: "Personal Website",
+    description: "A horizontal portfolio built with React, animated routing, and a quiet editorial system.",
     language: "TypeScript",
     languageColor: "#3178c6",
     stars: 4,
     forks: 1,
-    topics: ["portfolio", "react", "gsap"],
+    topics: ["portfolio", "react", "motion"],
     githubUrl: "https://github.com/Adi-Kaul/personalwebsite",
     demoUrl: "https://adi-kaul.dev",
-    readme: `# personalwebsite
+    readme: `# Personal Website
 
 TODO: replace this README with real project notes.
 
@@ -36,48 +93,9 @@ This project is the home base for Adi Kaul's work, experiments, and current inte
 
 - React 18
 - TypeScript
-- GSAP
 - Framer Motion
+- Three.js
 `,
     year: 2026
-  },
-  {
-    // TODO: replace with a real project.
-    slug: "studio-board",
-    name: "studio-board",
-    description: "A lightweight planning surface for shipping creative and technical work.",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    stars: 8,
-    forks: 2,
-    topics: ["planning", "product", "ui"],
-    githubUrl: "https://github.com/Adi-Kaul/studio-board",
-    readme: `# studio-board
-
-TODO: replace this README with real project notes.
-
-A compact dashboard concept for organizing active builds, next actions, and creative notes.
-`,
-    year: 2026
-  },
-  {
-    // TODO: replace with a real project.
-    slug: "signal-notes",
-    name: "signal-notes",
-    description: "An experiment in turning scattered notes into useful weekly signals.",
-    language: "JavaScript",
-    languageColor: "#f1e05a",
-    stars: 6,
-    forks: 0,
-    topics: ["notes", "automation", "writing"],
-    githubUrl: "https://github.com/Adi-Kaul/signal-notes",
-    demoUrl: "https://example.com",
-    readme: `# signal-notes
-
-TODO: replace this README with real project notes.
-
-Signal Notes explores how lightweight automation can make thinking visible without making it noisy.
-`,
-    year: 2025
   }
 ];

@@ -1,9 +1,8 @@
 import { useEffect, useMemo } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { marked } from "marked";
 import { motion, useReducedMotion } from "framer-motion";
 import { projects } from "../../data/projects";
-import LandingBackLink from "../../components/LandingBackLink";
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -27,7 +26,9 @@ export default function ProjectDetail() {
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
-      <LandingBackLink slideIndex={1} />
+      <Link className="back-link" to="/projects">
+        &lt;- Projects
+      </Link>
       <div className="page-header">
         <p className="breadcrumb">adi-kaul / {project.name}</p>
         <h1>{project.name}</h1>
