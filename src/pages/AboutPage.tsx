@@ -61,7 +61,7 @@ const interests = [
   },
   {
     title: "Photography",
-    description: "I shoot with a Nikon AF-P DX Nikkor. This is a yellow eyelash viper I photographed at the San Diego Zoo.",
+    description: "This is a yellow eyelash viper I photographed at the San Diego Zoo. I shoot with a Nikon D5600.",
     imageClass: "interest-preview--startups",
     imageSrc: "/images/interest-photography.jpg"
   }

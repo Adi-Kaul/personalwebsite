@@ -17,21 +17,18 @@ export default function Slide2Projects() {
       <SilkRingsInteractive className="silk-rings-gradient" />
       <div className="slide__inner">
         <div className="slide__content slide__content--projects">
+          <aside className="project-slide__cube" aria-label="Interactive project cube">
+            <Suspense fallback={null}>
+              <ProjectCube className="project-cube" />
+            </Suspense>
+          </aside>
           <div className="project-slide__intro">
             <button className="project-slide__title-button" type="button" onClick={openProjects}>
               <h1 className="hero-title hero-title--home">
                 <span className="hero-title__line hero-title__line--strong">Projects</span>
               </h1>
             </button>
-            <button className="project-slide__all-link" type="button" onClick={openProjects}>
-              See all projects -&gt;
-            </button>
           </div>
-          <aside className="project-slide__cube" aria-label="Interactive project cube">
-            <Suspense fallback={null}>
-              <ProjectCube className="project-cube" />
-            </Suspense>
-          </aside>
         </div>
       </div>
     </section>

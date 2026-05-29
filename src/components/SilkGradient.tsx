@@ -82,6 +82,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
     let imageData: ImageData | null = null;
     let frameId = 0;
     let lastFrameTime = 0;
+    let hasDrawnFirstFrame = false;
     let isActiveSlide = document.body.dataset.slide !== undefined ? document.body.dataset.slide === "0" : true;
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -254,6 +255,12 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
       ctx.drawImage(noiseCanvas, 0, 0);
       ctx.globalAlpha = 1;
 
+      if (!hasDrawnFirstFrame) {
+        hasDrawnFirstFrame = true;
+        canvas.classList.add("is-ready");
+        window.dispatchEvent(new Event("silk-gradient:ready"));
+      }
+
       frameId = requestAnimationFrame(draw);
     };
 
@@ -266,7 +273,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
       attributes: true,
       attributeFilter: ["data-slide"]
     });
-    draw();
+    draw(FRAME_INTERVAL);
     window.addEventListener("resize", resize);
 
     return () => {
