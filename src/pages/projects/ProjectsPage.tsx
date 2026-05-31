@@ -82,7 +82,7 @@ export default function ProjectsPage() {
               key={activeProject.slug}
               transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }}
             >
-              {activeProject.slug === "scopeplus" && activeImage ? (
+              {activeImages.length > 0 && activeImage ? (
                 <div
                   className="project-preview__media project-preview__media--carousel"
                   aria-label={`Preview images for ${activeProject.name}`}
@@ -100,7 +100,7 @@ export default function ProjectsPage() {
                       type="button"
                       className="project-preview__carousel-fullscreen"
                       onClick={() => setIsFullscreen(true)}
-                      aria-label="View ScopePlus screenshots fullscreen"
+                      aria-label={`View ${activeProject.name} screenshots fullscreen`}
                     >
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                         <path
@@ -112,13 +112,13 @@ export default function ProjectsPage() {
                       </svg>
                     </button>
                     <div className="project-preview__carousel-controls">
-                      <button type="button" onClick={showPreviousImage} aria-label="Previous ScopePlus screenshot">
+                      <button type="button" onClick={showPreviousImage} aria-label={`Previous ${activeProject.name} screenshot`}>
                         Prev
                       </button>
                       <span>
                         {activeImageIndex + 1}/{activeImages.length}
                       </span>
-                      <button type="button" onClick={showNextImage} aria-label="Next ScopePlus screenshot">
+                      <button type="button" onClick={showNextImage} aria-label={`Next ${activeProject.name} screenshot`}>
                         Next
                       </button>
                     </div>

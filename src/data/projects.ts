@@ -25,6 +25,17 @@ export const projects: Project[] = [
     forks: 0,
     topics: ["Next.js", "TypeScript", "Tailwind CSS", "Oracle 23ai", "Oracle Generative AI", "Cohere Embeddings", "Llama", "Zustand"],
     githubUrl: "https://github.com/Adi-Kaul/StepAI",
+    images: [
+      "/images/stepai-1-homescreen.png",
+      "/images/stepai-2-resumeparsing.png",
+      "/images/stepai-3-jobinterests.png",
+      "/images/stepai-4-loadingpage.png",
+      "/images/stepai-9.png",
+      "/images/stepai-10.png",
+      "/images/stepai-12.png",
+      "/images/stepai-13.png",
+      "/images/stepai-16.png",
+    ],
     readme: `# Step.ai
 
 Step.ai is an AI-powered career strategy platform built around a background agent loop.
