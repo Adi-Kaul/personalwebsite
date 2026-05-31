@@ -1,5 +1,4 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 
 interface UseSlideManagerOptions {
   slideCount: number;
@@ -26,6 +25,10 @@ function visualIndexFor(logicalIndex: number) {
   return logicalIndex + 1;
 }
 
+function offsetForVisualIndex(visualIndex: number) {
+  return -(visualIndex * window.innerWidth);
+}
+
 function readDuration() {
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue("--slide-transition-duration")
@@ -43,6 +46,20 @@ function readEase() {
   return raw || "power2.inOut";
 }
 
+function cssEaseFor(ease: string) {
+  if (ease === "power2.inOut") {
+    return "cubic-bezier(0.45, 0, 0.15, 1)";
+  }
+
+  return ease;
+}
+
+function setTrackOffset(track: HTMLElement, visualIndex: number, animate: boolean) {
+  const duration = animate ? readDuration() : 0;
+  track.style.transition = animate ? `transform ${duration}s ${cssEaseFor(readEase())}` : "none";
+  track.style.transform = `translate3d(${offsetForVisualIndex(visualIndex)}px, 0, 0)`;
+}
+
 function readStoredIndex(slideCount: number) {
   const stored = Number.parseInt(sessionStorage.getItem("lastSlide") ?? "0", 10);
   return Number.isFinite(stored) ? clampIndex(stored, slideCount) : 0;
@@ -54,6 +71,7 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
   const isAnimatingRef = useRef(false);
   const touchStartXRef = useRef<number | null>(null);
   const lastWheelAtRef = useRef(0);
+  const animationTimeoutRef = useRef<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const setBodySlide = useCallback((index: number) => {
@@ -61,11 +79,41 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
     sessionStorage.setItem("lastSlide", String(index));
   }, []);
 
+  const setEdgeSlides = useCallback((leftIndex: number, rightIndex = leftIndex) => {
+    document.body.dataset.edgeLeftSlide = String(leftIndex);
+    document.body.dataset.edgeRightSlide = String(rightIndex);
+  }, []);
+
+  const jumpTo = useCallback(
+    (index: number) => {
+      const nextIndex = wrapIndex(index, slideCount);
+      const track = document.querySelector<HTMLElement>("#slides-track");
+
+      if (animationTimeoutRef.current !== null) {
+        window.clearTimeout(animationTimeoutRef.current);
+        animationTimeoutRef.current = null;
+      }
+
+      isAnimatingRef.current = false;
+      currentIndexRef.current = nextIndex;
+      setCurrentIndex(nextIndex);
+      setBodySlide(nextIndex);
+      setEdgeSlides(nextIndex);
+
+      if (track) {
+        setTrackOffset(track, visualIndexFor(nextIndex), false);
+      }
+    },
+    [setBodySlide, setEdgeSlides, slideCount]
+  );
+
   const animateTo = useCallback(
     (index: number) => {
       const nextIndex = wrapIndex(index, slideCount);
+      const previousIndex = currentIndexRef.current;
       const visualIndex =
         index < 0 ? 0 : index >= slideCount ? slideCount + 1 : visualIndexFor(nextIndex);
+      const visualDirection = visualIndex - visualIndexFor(previousIndex);
 
       if (nextIndex === currentIndexRef.current || isAnimatingRef.current) {
         return;
@@ -84,26 +132,33 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
       setBodySlide(nextIndex);
 
       if (prefersReducedMotion) {
-        gsap.set(track, { x: `${-(visualIndexFor(nextIndex) * 100)}vw` });
+        setTrackOffset(track, visualIndexFor(nextIndex), false);
+        setEdgeSlides(nextIndex);
         isAnimatingRef.current = false;
         return;
       }
 
-      gsap.to(track, {
-        x: `${-(visualIndex * 100)}vw`,
-        duration: readDuration(),
-        ease: readEase(),
-        overwrite: "auto",
-        onComplete: () => {
-          if (index < 0 || index >= slideCount) {
-            gsap.set(track, { x: `${-(visualIndexFor(nextIndex) * 100)}vw` });
-          }
+      setEdgeSlides(
+        visualDirection < 0 ? nextIndex : previousIndex,
+        visualDirection > 0 ? nextIndex : previousIndex
+      );
+      setTrackOffset(track, visualIndex, true);
 
-          isAnimatingRef.current = false;
+      if (animationTimeoutRef.current !== null) {
+        window.clearTimeout(animationTimeoutRef.current);
+      }
+
+      animationTimeoutRef.current = window.setTimeout(() => {
+        if (index < 0 || index >= slideCount) {
+          setTrackOffset(track, visualIndexFor(nextIndex), false);
         }
-      });
+
+        setEdgeSlides(nextIndex);
+        isAnimatingRef.current = false;
+        animationTimeoutRef.current = null;
+      }, readDuration() * 1000 + 60);
     },
-    [setBodySlide, slideCount]
+    [setBodySlide, setEdgeSlides, slideCount]
   );
 
   useEffect(() => {
@@ -113,11 +168,35 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
     currentIndexRef.current = initialIndex;
     setCurrentIndex(initialIndex);
     setBodySlide(initialIndex);
+    setEdgeSlides(initialIndex);
 
     if (track) {
-      gsap.set(track, { x: `${-(visualIndexFor(initialIndex) * 100)}vw` });
+      setTrackOffset(track, visualIndexFor(initialIndex), false);
     }
-  }, [setBodySlide, slideCount]);
+
+    return () => {
+      if (animationTimeoutRef.current !== null) {
+        window.clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, [setBodySlide, setEdgeSlides, slideCount]);
+
+  useEffect(() => {
+    function handleResize() {
+      const track = document.querySelector<HTMLElement>("#slides-track");
+      if (!track || isAnimatingRef.current) {
+        return;
+      }
+
+      setTrackOffset(track, visualIndexFor(currentIndexRef.current), false);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -193,14 +272,21 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
       animateTo(customEvent.detail);
     }
 
+    function handleExternalImmediateJump(event: Event) {
+      const customEvent = event as CustomEvent<number>;
+      jumpTo(customEvent.detail);
+    }
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("slide:goTo", handleExternalJump);
+    window.addEventListener("slide:setImmediate", handleExternalImmediateJump);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("slide:goTo", handleExternalJump);
+      window.removeEventListener("slide:setImmediate", handleExternalImmediateJump);
     };
-  }, [animateTo]);
+  }, [animateTo, jumpTo]);
 
   return {
     containerRef,

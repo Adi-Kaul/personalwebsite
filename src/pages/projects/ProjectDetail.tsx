@@ -22,12 +22,12 @@ export default function ProjectDetail() {
     <motion.main
       animate={{ opacity: 1, y: 0 }}
       className="subpage subpage--project-detail"
-      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 0 }}
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: reducedMotion ? 0 : 0.5, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
-      <Link className="back-link" to="/">
-        &lt;- Adi Kaul
+      <Link className="back-link" to="/projects">
+        &lt;- Projects
       </Link>
       <div className="page-header">
         <p className="breadcrumb">adi-kaul / {project.name}</p>

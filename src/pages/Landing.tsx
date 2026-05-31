@@ -1,43 +1,75 @@
+import { useEffect, useState } from "react";
 import DotNav from "../components/DotNav";
 import ContactLinks from "../components/ContactLinks";
-import IntroCurtain from "../components/IntroCurtain";
 import { useSlideManager } from "../hooks/useSlideManager";
 import Slide1Home from "./slides/Slide1Home";
 import Slide2Projects from "./slides/Slide2Projects";
 import Slide3About from "./slides/Slide3About";
-import Slide4Experience from "./slides/Slide4Experience";
-import Slide5Recently from "./slides/Slide5Recently";
 
-const SLIDE_COUNT = 5;
+const SLIDE_COUNT = 3;
 
 interface LandingProps {
-  playIntro?: boolean;
-  onIntroComplete?: () => void;
+  isVisible?: boolean;
+  returnToken?: number;
 }
 
-export default function Landing({ playIntro = false, onIntroComplete }: LandingProps) {
+export default function Landing({ isVisible = true, returnToken = 0 }: LandingProps) {
+  const [isReturning, setIsReturning] = useState(false);
   const { containerRef, currentIndex, goToSlide } = useSlideManager({
     slideCount: SLIDE_COUNT
   });
 
+  useEffect(() => {
+    function animateReturn() {
+      setIsReturning(true);
+      window.setTimeout(() => {
+        setIsReturning(false);
+      }, 620);
+    }
+
+    window.addEventListener("landing:returning", animateReturn);
+    return () => window.removeEventListener("landing:returning", animateReturn);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setIsReturning(false);
+      return;
+    }
+
+    if (returnToken === 0 && sessionStorage.getItem("landingReturnAnimation") !== "true") {
+      return;
+    }
+
+    sessionStorage.removeItem("landingReturnAnimation");
+    setIsReturning(true);
+    const timeout = window.setTimeout(() => {
+      setIsReturning(false);
+    }, 620);
+
+    return () => window.clearTimeout(timeout);
+  }, [isVisible, returnToken]);
+
   return (
-    <main className="landing" ref={containerRef} aria-label="Adi Kaul landing slides">
+    <main
+      aria-hidden={!isVisible}
+      aria-label="Adi Kaul landing slides"
+      className={`landing${isVisible ? "" : " landing--parked"}${isReturning ? " landing--returning" : ""}`}
+      ref={containerRef}
+    >
       <DotNav currentIndex={currentIndex} goToSlide={goToSlide} slideCount={SLIDE_COUNT} />
       <ContactLinks />
       <div id="slides-track">
         <div className="slide-clone" aria-hidden="true">
-          <Slide5Recently />
+          <Slide3About />
         </div>
         <Slide1Home />
         <Slide2Projects />
         <Slide3About />
-        <Slide4Experience />
-        <Slide5Recently />
         <div className="slide-clone" aria-hidden="true">
           <Slide1Home />
         </div>
       </div>
-      {playIntro ? <IntroCurtain onDone={onIntroComplete ?? (() => undefined)} /> : null}
     </main>
   );
 }

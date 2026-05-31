@@ -10,13 +10,14 @@ export default function Slide5Recently() {
   }
 
   return (
-    <section className="slide slide--five" aria-label="Recently">
+    <section className="slide slide--five" aria-label="What I'm Doing Now">
       <div className="slide__inner">
         <div className="slide__content">
-          <h1 className="hero-title">
-            <span className="hero-title__line hero-title__line--strong">Right now.</span>
+          <h1 className="hero-title hero-title--home">
+            <span className="hero-title__line hero-title__line--strong">What I'm</span>
+            <span className="hero-title__line hero-title__line--strong">Doing Now</span>
           </h1>
-          <div className="recent-teasers">
+          <div className="recent-teasers recent-teasers--deck">
             {recently.slice(0, 3).map((item) => (
               <p key={`${item.category}-${item.text}`}>{item.text}</p>
             ))}

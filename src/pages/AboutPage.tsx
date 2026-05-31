@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import LandingBackLink from "../components/LandingBackLink";
 
 const reveal = {
   initial: { opacity: 0, y: 30 },
@@ -8,24 +8,94 @@ const reveal = {
   viewport: { once: true }
 };
 
+const heroPhotos = [
+  {
+    className: "about-photo-card--primary",
+    label: "Adi Kaul headshot",
+    src: "/images/adi-headshot.jpg"
+  },
+  {
+    className: "about-photo-card--secondary",
+    label: "Michigan Stadium photo",
+    src: "/images/umich-football.jpg"
+  },
+  {
+    className: "about-photo-card--tertiary",
+    label: "Jellyfish aquarium photo",
+    src: "/images/jelly.jpg"
+  },
+  {
+    className: "about-photo-card--small",
+    label: "Rocky sea coast photo",
+    src: "/images/the-sea.jpg"
+  }
+];
+
+const strengths = [
+  "Python",
+  "C++",
+  "Web Development (React, JavaScript)",
+  "App Development (Flutter / Dart)",
+  "Firebase",
+  "Git"
+];
+
+const interests = [
+  {
+    title: "Tech Consulting",
+    description: "A final client presentation with my Tech Plus Consulting team at UofM, where I served as Senior Technical Analyst.",
+    imageClass: "interest-preview--motion",
+    imageSrc: "/images/interest-consulting.png"
+  },
+  {
+    title: "Snowboarding",
+    description: "Growing up around Vancouver spoiled me with mountains to choose from; Cypress is still my favorite.",
+    imageClass: "interest-preview--tools",
+    imageSrc: "/images/interest-snowboarding.jpg"
+  },
+  {
+    title: "Bouldering",
+    description: "I usually climb indoors, but this was my first time trying outdoor bouldering in Squamish.",
+    imageClass: "interest-preview--product",
+    imageSrc: "/images/interest-bouldering.jpg"
+  },
+  {
+    title: "Photography",
+    description: "This is a yellow eyelash viper I photographed at the San Diego Zoo. I shoot with a Nikon D5600.",
+    imageClass: "interest-preview--startups",
+    imageSrc: "/images/interest-photography.jpg"
+  }
+];
+
 export default function AboutPage() {
   const reducedMotion = useReducedMotion();
+  const [activeInterest, setActiveInterest] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const selectedInterest = interests[activeInterest];
 
   useEffect(() => {
-    document.body.dataset.slide = "2";
+    document.body.dataset.slide = "0";
+  }, []);
+
+  useEffect(() => {
+    function handleScroll() {
+      setShowScrollHint(window.scrollY < 80);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <motion.main
       animate={{ opacity: 1, y: 0 }}
       className="subpage subpage--about"
-      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+      exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: 0 }}
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: reducedMotion ? 0 : 0.5, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
-      <Link className="back-link" to="/">
-        &lt;- Adi Kaul
-      </Link>
+      <LandingBackLink slideIndex={0} />
       <header className="about-hero">
         <motion.div
           className="about-hero__copy"
@@ -40,13 +110,13 @@ export default function AboutPage() {
           <p className="about-hero__eyebrow">About</p>
           <h1>I'm Adi.</h1>
           <p className="about-hero__intro">
-            I am a Computer Science major at the University of Michigan who likes building
-            thoughtful, useful software: the kind where the interface, the system, and the idea all
-            feel like they belong together.
+            I am a Computer Science major at the University of Michigan interested in building
+            purposeful software that blends human-centered design with AI to improve people's lives.
           </p>
         </motion.div>
-        <motion.figure
-          className="about-portrait"
+        <motion.div
+          aria-label="Photo collage for Adi Kaul"
+          className="about-photo-collage"
           {...(reducedMotion
             ? {}
             : {
@@ -55,55 +125,127 @@ export default function AboutPage() {
                 transition: { duration: 0.62, delay: 0.08, ease: "easeOut" }
               })}
         >
-          <div className="about-portrait__image" role="img" aria-label="Portrait placeholder for Adi Kaul">
-            <span>AK</span>
-          </div>
-          <figcaption>Developer / Builder / Student</figcaption>
-        </motion.figure>
+          {heroPhotos.map((photo) => (
+            <div
+              className={`about-photo-card ${photo.className}`}
+              key={photo.className}
+              {...(photo.src ? {} : { "aria-label": photo.label, role: "img" as const })}
+            >
+              {photo.src ? (
+                <img
+                  alt={photo.label}
+                  className="about-photo-card__image"
+                  height="1200"
+                  src={photo.src}
+                  width="900"
+                />
+              ) : null}
+            </div>
+          ))}
+        </motion.div>
+
+        <AnimatePresence>
+          {showScrollHint ? (
+            <motion.div
+              className="about-scroll-cue"
+              aria-hidden="true"
+              initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.4, ease: "easeOut", delay: reducedMotion ? 0 : 0.8 }}
+            >
+              <span className="about-scroll-cue__label">More about me</span>
+              <motion.svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                animate={reducedMotion ? {} : { y: [0, 6, 0] }}
+                transition={reducedMotion ? {} : { duration: 1.5, ease: "easeInOut", repeat: Infinity }}
+              >
+                <path d="M12 4v15M6 13l6 6 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+              </motion.svg>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </header>
 
-      <motion.section className="content-section about-section" {...(reducedMotion ? {} : reveal)}>
-        <h2>What I like building</h2>
-        <p className="body-copy">
-          I am drawn to development that turns messy ideas into clean, working products. I like
-          frontend engineering because every detail matters: the structure of the code, the rhythm
-          of an interaction, and the small visual decisions that make something feel intuitive.
-        </p>
-        <p className="body-copy">
-          I am especially interested in interactive web apps, developer tools, product engineering,
-          and systems that make everyday work feel lighter. The sweet spot for me is where design
-          taste and technical execution meet.
-        </p>
+      <motion.section className="content-section about-split" {...(reducedMotion ? {} : reveal)}>
+        <article className="about-split__panel">
+          <h2>What I like building</h2>
+          <p className="body-copy">
+            I like building things that start from real problems, especially the small frustrations
+            people run into every day. Recently, I have been especially drawn to products centered
+            around AI, not just AI added onto existing software. I am interested in exploring how AI
+            can reshape the way people learn, work, create, and solve everyday problems.
+          </p>
+          <p className="body-copy">
+            Ultimately, what I care about most is building with purpose. I want the things I make to feel
+            thoughtful, practical, and genuinely useful, while pushing toward a future where software
+            makes people more capable.
+          </p>
+        </article>
+        <article className="about-split__panel">
+          <h2>Skills</h2>
+          <ul className="about-strength-list">
+            {strengths.map((strength) => (
+              <li key={strength}>{strength}</li>
+            ))}
+          </ul>
+        </article>
       </motion.section>
 
-      <motion.section className="content-section about-section" {...(reducedMotion ? {} : reveal)}>
-        <h2>Strengths</h2>
-        <div className="about-pillars">
-          <article>
-            <span>01</span>
-            <h3>Product sense</h3>
-            <p>I care about why something should exist before deciding how it should work.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Fast learning</h3>
-            <p>I like unfamiliar problems and can get from rough context to a working path quickly.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Polish</h3>
-            <p>I pay attention to the last 10 percent: spacing, motion, naming, and the feel of use.</p>
-          </article>
-        </div>
-      </motion.section>
-
-      <motion.section className="content-section about-section" {...(reducedMotion ? {} : reveal)}>
-        <h2>Interests</h2>
-        <div className="interest-list">
-          <p>Human-centered software</p>
-          <p>Creative coding and motion</p>
-          <p>AI-assisted workflows</p>
-          <p>Clean systems and thoughtful interfaces</p>
+      <motion.section className="content-section about-section about-interests" {...(reducedMotion ? {} : reveal)}>
+        <div className="about-interest-layout">
+          <div>
+            <h2>Other Interests</h2>
+            <ul className="interest-list" aria-label="Interest image selector">
+              {interests.map((interest, index) => (
+                <li key={interest.title}>
+                  <button
+                    aria-pressed={activeInterest === index}
+                    className="interest-button"
+                    type="button"
+                    onClick={() => setActiveInterest(index)}
+                  >
+                    <span className="interest-button__dot" aria-hidden="true" />
+                    <span>{interest.title}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.figure
+              animate={{ opacity: 1, y: 0 }}
+              className={`interest-preview ${selectedInterest.imageClass}`}
+              exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
+              initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              key={selectedInterest.title}
+              transition={{ duration: reducedMotion ? 0 : 0.28, ease: "easeOut" }}
+            >
+              <div
+                className={`interest-preview__image${selectedInterest.imageSrc ? " interest-preview__image--photo" : ""}`}
+                {...(selectedInterest.imageSrc
+                  ? {}
+                  : { "aria-label": `${selectedInterest.title} visual`, role: "img" as const })}
+              >
+                {selectedInterest.imageSrc ? (
+                  <img
+                    alt={`${selectedInterest.title} visual`}
+                    className="interest-preview__photo"
+                    height="1200"
+                    src={selectedInterest.imageSrc}
+                    width="1800"
+                  />
+                ) : null}
+              </div>
+              <figcaption>
+                <strong>{selectedInterest.title}</strong>
+                <span>{selectedInterest.description}</span>
+              </figcaption>
+            </motion.figure>
+          </AnimatePresence>
         </div>
       </motion.section>
     </motion.main>
