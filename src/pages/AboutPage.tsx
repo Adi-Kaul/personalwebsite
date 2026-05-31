@@ -70,10 +70,21 @@ const interests = [
 export default function AboutPage() {
   const reducedMotion = useReducedMotion();
   const [activeInterest, setActiveInterest] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(true);
   const selectedInterest = interests[activeInterest];
 
   useEffect(() => {
     document.body.dataset.slide = "0";
+  }, []);
+
+  useEffect(() => {
+    function handleScroll() {
+      setShowScrollHint(window.scrollY < 80);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -132,6 +143,31 @@ export default function AboutPage() {
             </div>
           ))}
         </motion.div>
+
+        <AnimatePresence>
+          {showScrollHint ? (
+            <motion.div
+              className="about-scroll-cue"
+              aria-hidden="true"
+              initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.4, ease: "easeOut", delay: reducedMotion ? 0 : 0.8 }}
+            >
+              <span className="about-scroll-cue__label">More about me</span>
+              <motion.svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                animate={reducedMotion ? {} : { y: [0, 6, 0] }}
+                transition={reducedMotion ? {} : { duration: 1.5, ease: "easeInOut", repeat: Infinity }}
+              >
+                <path d="M12 4v15M6 13l6 6 6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+              </motion.svg>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </header>
 
       <motion.section className="content-section about-split" {...(reducedMotion ? {} : reveal)}>
