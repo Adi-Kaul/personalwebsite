@@ -8,6 +8,7 @@ export default function ProjectsPage() {
   const reducedMotion = useReducedMotion();
   const [activeSlug, setActiveSlug] = useState(projects[0]?.slug ?? "");
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const activeProject = projects.find((project) => project.slug === activeSlug) ?? projects[0] ?? null;
   const activeImages = activeProject?.images ?? [];
   const activeImage = activeImages[activeImageIndex] ?? activeImages[0];
@@ -18,6 +19,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     setActiveImageIndex(0);
+    setIsFullscreen(false);
   }, [activeSlug]);
 
   function showPreviousImage() {
@@ -27,6 +29,19 @@ export default function ProjectsPage() {
   function showNextImage() {
     setActiveImageIndex((index) => (index + 1) % activeImages.length);
   }
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsFullscreen(false);
+      if (event.key === "ArrowLeft") showPreviousImage();
+      if (event.key === "ArrowRight") showNextImage();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isFullscreen, activeImages.length]);
 
   return (
     <motion.main
@@ -81,6 +96,21 @@ export default function ProjectsPage() {
                       src={activeImage}
                       width="1600"
                     />
+                    <button
+                      type="button"
+                      className="project-preview__carousel-fullscreen"
+                      onClick={() => setIsFullscreen(true)}
+                      aria-label="View ScopePlus screenshots fullscreen"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path
+                          d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="square"
+                        />
+                      </svg>
+                    </button>
                     <div className="project-preview__carousel-controls">
                       <button type="button" onClick={showPreviousImage} aria-label="Previous ScopePlus screenshot">
                         Prev
@@ -131,6 +161,72 @@ export default function ProjectsPage() {
           ) : null}
         </AnimatePresence>
       </section>
+
+      <AnimatePresence>
+        {isFullscreen && activeImage ? (
+          <motion.div
+            className="project-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeProject?.name ?? "Project"} screenshots`}
+            onClick={() => setIsFullscreen(false)}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
+          >
+            <button
+              type="button"
+              className="project-lightbox__close"
+              onClick={() => setIsFullscreen(false)}
+              aria-label="Exit fullscreen"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              className="project-lightbox__arrow project-lightbox__arrow--prev"
+              onClick={(event) => {
+                event.stopPropagation();
+                showPreviousImage();
+              }}
+              aria-label="Previous screenshot"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+              </svg>
+            </button>
+
+            <figure className="project-lightbox__stage" onClick={(event) => event.stopPropagation()}>
+              <img
+                alt={`${activeProject?.name ?? "Project"} screenshot ${activeImageIndex + 1}`}
+                className="project-lightbox__image"
+                src={activeImage}
+              />
+              <figcaption className="project-lightbox__counter">
+                {activeImageIndex + 1}/{activeImages.length}
+              </figcaption>
+            </figure>
+
+            <button
+              type="button"
+              className="project-lightbox__arrow project-lightbox__arrow--next"
+              onClick={(event) => {
+                event.stopPropagation();
+                showNextImage();
+              }}
+              aria-label="Next screenshot"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+              </svg>
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </motion.main>
   );
 }
