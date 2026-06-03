@@ -175,6 +175,7 @@ Authentication runs through Firebase with email/OTP verification and a multi-ste
     topics: ["React", "TypeScript", "Framer Motion", "Vite", "Three.js", "React Router"],
     githubUrl: "https://github.com/Adi-Kaul/personalwebsite",
     demoUrl: "https://adi-kaul.dev",
+    media: "monitor",
     images: [
       "/images/personalwebsite-1.png",
       "/images/personalwebsite-2.png",

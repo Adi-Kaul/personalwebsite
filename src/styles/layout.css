@@ -310,10 +310,39 @@ body[data-slide="0"] .landing {
 }
 
 .slide--three {
-  --slide-bg: var(--slide-3-bg);
-  --slide-fg: var(--slide-3-fg);
-  --current-slide-fg-rgb: var(--slide-3-fg-rgb);
-  --local-divider: var(--slide-3-fg);
+  --slide-bg: #480208;
+  --slide-fg: var(--color-tan);
+  --current-slide-fg-rgb: 252, 240, 218;
+  --local-divider: var(--color-tan);
+}
+
+.slide--three::before {
+  background:
+    radial-gradient(circle at 58% 64%, rgba(235, 100, 110, 0.58), transparent 34%),
+    radial-gradient(circle at 80% 36%, rgba(190, 25, 45, 0.4), transparent 28%),
+    linear-gradient(145deg, #370d12 0%, #7a1020 54%, #e07878 100%);
+}
+
+.slide--three::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(circle at 82% 52%, rgba(252, 240, 218, 0.12), transparent 32%),
+    linear-gradient(90deg, rgba(55, 13, 18, 0.34), rgba(55, 13, 18, 0.08));
+}
+
+.slide--three .slide__content {
+  width: min(1200px, 84vw);
+  margin-left: auto;
+  text-align: right;
+}
+
+.slide--three .hero-title--home,
+.slide--three .slide__kicker--home {
+  max-width: 100%;
 }
 
 .slide--four {

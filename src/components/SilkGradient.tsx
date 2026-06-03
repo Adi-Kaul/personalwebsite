@@ -1,6 +1,15 @@
 import { CSSProperties, useEffect, useRef } from "react";
 
-const PRESET = {
+export interface SilkPreset {
+  bg: [number, number, number];
+  stops: [number, number, number][];
+  speed: number;
+  scale: number;
+  voids: number;
+  grain: number;
+}
+
+const BLUE_PRESET: SilkPreset = {
   bg: [5, 35, 55],
   stops: [
     [5, 35, 55],
@@ -57,9 +66,11 @@ const PERMUTATION = createPermutation();
 interface SilkGradientProps {
   className?: string;
   style?: CSSProperties;
+  preset?: SilkPreset;
+  slideDataValue?: string;
 }
 
-export default function SilkGradient({ style, className }: SilkGradientProps) {
+export default function SilkGradient({ style, className, preset = BLUE_PRESET, slideDataValue = "0" }: SilkGradientProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -83,7 +94,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
     let frameId = 0;
     let lastFrameTime = 0;
     let hasDrawnFirstFrame = false;
-    let isActiveSlide = document.body.dataset.slide !== undefined ? document.body.dataset.slide === "0" : true;
+    let isActiveSlide = document.body.dataset.slide !== undefined ? document.body.dataset.slide === slideDataValue : true;
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     const fade = (value: number) => value * value * value * (value * (value * 6 - 15) + 10);
@@ -202,7 +213,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
       lastFrameTime = now;
 
       if (!reduceMotionQuery.matches && now - sharedGradientClock.lastAdvanceAt >= FRAME_INTERVAL) {
-        sharedGradientClock.time += 0.007 * PRESET.speed;
+        sharedGradientClock.time += 0.007 * preset.speed;
         sharedGradientClock.lastAdvanceAt = now;
       }
 
@@ -212,11 +223,11 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
       }
 
       const time = sharedGradientClock.time;
-      const scale = PRESET.scale;
+      const scale = preset.scale;
       const imageWidth = offscreenCanvas.width;
       const imageHeight = offscreenCanvas.height;
       const data = imageData.data;
-      const bg = PRESET.bg;
+      const bg = preset.bg;
 
       for (let py = 0; py < imageHeight; py += 1) {
         for (let px = 0; px < imageWidth; px += 1) {
@@ -235,9 +246,9 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
           const bandValue = fbm(nx + cx * 0.55 + time * 0.12, ny + cy * 0.55 + time * 0.1);
           const value = bandValue * 0.5 + 0.5;
           const voidNoise = noise(nx * scale * 1.5 + time * 0.18 + 13.7, ny * scale * 1.5 - time * 0.14 + 6.2);
-          const darkness = Math.max(0, -voidNoise - 0.3) * PRESET.voids * 2.5;
+          const darkness = Math.max(0, -voidNoise - 0.3) * preset.voids * 2.5;
           const brightness = 1 - darkness;
-          const color = lerpColor(PRESET.stops, value);
+          const color = lerpColor(preset.stops, value);
           const index = (py * imageWidth + px) * 4;
 
           data[index] = Math.min(255, color[0] * brightness + bg[0] * (1 - brightness)) | 0;
@@ -251,7 +262,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "medium";
       ctx.drawImage(offscreenCanvas, 0, 0, width, height);
-      ctx.globalAlpha = PRESET.grain * 0.18;
+      ctx.globalAlpha = preset.grain * 0.18;
       ctx.drawImage(noiseCanvas, 0, 0);
       ctx.globalAlpha = 1;
 
@@ -266,7 +277,7 @@ export default function SilkGradient({ style, className }: SilkGradientProps) {
 
     resize();
     const slideObserver = new MutationObserver(() => {
-      isActiveSlide = document.body.dataset.slide === "0";
+      isActiveSlide = document.body.dataset.slide === slideDataValue;
       lastFrameTime = 0;
     });
     slideObserver.observe(document.body, {

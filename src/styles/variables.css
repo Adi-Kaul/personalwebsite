@@ -14,20 +14,20 @@
   /* Slide colors */
   --slide-1-bg: #fcf0da;
   --slide-2-bg: #25212e;
-  --slide-3-bg: #ffd3a6;
+  --slide-3-bg: #480208;
   --slide-4-bg: #245a52;
   --slide-5-bg: #efae37;
 
   /* Per-slide foreground color */
   --slide-1-fg: #25212e;
   --slide-2-fg: #fcf0da;
-  --slide-3-fg: #25212e;
+  --slide-3-fg: #fcf0da;
   --slide-4-fg: #d1e5e3;
   --slide-5-fg: #25212e;
 
   --slide-1-fg-rgb: 37, 33, 46;
   --slide-2-fg-rgb: 252, 240, 218;
-  --slide-3-fg-rgb: 37, 33, 46;
+  --slide-3-fg-rgb: 252, 240, 218;
   --slide-4-fg-rgb: 209, 229, 227;
   --slide-5-fg-rgb: 37, 33, 46;
 
