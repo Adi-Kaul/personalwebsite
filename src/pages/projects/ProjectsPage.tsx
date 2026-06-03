@@ -15,6 +15,7 @@ export default function ProjectsPage() {
   const activeImages = activeProject?.images ?? [];
   const activeImage = activeImages[activeImageIndex] ?? activeImages[0];
   const isPhoneCarousel = activeProject?.media === "phone" && activeImages.length > 0;
+  const isMonitorCarousel = activeProject?.media === "monitor" && activeImages.length > 0;
   const phonePageCount = Math.max(1, Math.ceil(activeImages.length / phonesPerView));
   const visiblePhoneStart = phonePage * phonesPerView;
   const visiblePhones = activeImages.slice(visiblePhoneStart, visiblePhoneStart + phonesPerView);
@@ -125,7 +126,71 @@ export default function ProjectsPage() {
               key={activeProject.slug}
               transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }}
             >
-              {isPhoneCarousel ? (
+              {isMonitorCarousel ? (
+                <div
+                  className="project-preview__media project-preview__media--monitor"
+                  aria-label={`Preview screens for ${activeProject.name}`}
+                  aria-roledescription="carousel"
+                >
+                  <button
+                    type="button"
+                    className="phone-carousel__arrow phone-carousel__arrow--prev"
+                    onClick={showPreviousImage}
+                    aria-label={`Previous ${activeProject.name} screenshot`}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    </svg>
+                  </button>
+
+                  <div className="monitor-carousel__viewport">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        className="monitor-frame-wrapper"
+                        key={activeImageIndex}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+                        initial={reducedMotion ? { opacity: 1 } : { opacity: 0, x: 12 }}
+                        transition={{ duration: reducedMotion ? 0 : 0.22, ease: "easeOut" }}
+                      >
+                        <button
+                          type="button"
+                          className="monitor-frame"
+                          onClick={() => setIsFullscreen(true)}
+                          aria-label={`View ${activeProject.name} screenshot ${activeImageIndex + 1} fullscreen`}
+                        >
+                          <span className="monitor-frame__led" aria-hidden="true" />
+                          <img
+                            alt={`${activeProject.name} screenshot ${activeImageIndex + 1}`}
+                            className="monitor-frame__screen"
+                            height="1080"
+                            loading="lazy"
+                            src={activeImage}
+                            width="1920"
+                          />
+                        </button>
+                        <div className="monitor-frame__neck" aria-hidden="true" />
+                        <div className="monitor-frame__base" aria-hidden="true" />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="phone-carousel__arrow phone-carousel__arrow--next"
+                    onClick={showNextImage}
+                    aria-label={`Next ${activeProject.name} screenshot`}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    </svg>
+                  </button>
+
+                  <span className="phone-carousel__counter" aria-hidden="true">
+                    {activeImageIndex + 1}/{activeImages.length}
+                  </span>
+                </div>
+              ) : isPhoneCarousel ? (
                 <div
                   className="project-preview__media project-preview__media--phones"
                   aria-label={`Preview screens for ${activeProject.name}`}

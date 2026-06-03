@@ -32,8 +32,9 @@ export interface Project {
   demoUrl?: string;
   images?: string[];
   /** How `images` are displayed in the carousel. "phone" shows portrait
-   * iPhone-framed screenshots, multiple at a time. Defaults to landscape. */
-  media?: "landscape" | "phone";
+   * iPhone-framed screenshots, multiple at a time. "monitor" shows one
+   * landscape screenshot at a time inside a monitor bezel with stand. Defaults to landscape. */
+  media?: "landscape" | "phone" | "monitor";
   readme: string;
 }
 
@@ -49,6 +50,7 @@ export const projects: Project[] = [
     forks: 0,
     topics: ["Next.js", "TypeScript", "Tailwind CSS", "Oracle 23ai", "Oracle Generative AI", "Cohere Embeddings", "Llama", "Zustand"],
     githubUrl: "https://github.com/Adi-Kaul/StepAI",
+    media: "monitor",
     images: [
       "/images/stepai-1-homescreen.png",
       "/images/stepai-2-resumeparsing.png",
@@ -96,6 +98,7 @@ The main agent loop collects user data, generates missing embeddings, ranks jobs
     forks: 0,
     topics: ["React", "Firebase Auth", "Firestore", "Manifest V3", "Tailwind CSS", "Groq API", "Claude API"],
     githubUrl: "https://github.com/Adi-Kaul/ScopePlus",
+    media: "monitor",
     images: [
       "/images/scopeplus-gradescope-scan.png",
       "/images/scopeplus-feedback-summary.png",

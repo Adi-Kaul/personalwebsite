@@ -940,7 +940,7 @@ body[data-slide="0"] .landing {
    The block reserves the same height as the landscape carousel so the title,
    description, and tags below line up with the other projects. */
 .project-preview__media--phones {
-  --phone-gap: clamp(2rem, 4.5vw, 4.5rem);
+  --phone-gap: clamp(3rem, 6vw, 6rem);
   position: relative;
   display: flex;
   align-items: center;
@@ -1047,6 +1047,96 @@ body[data-slide="0"] .landing {
   letter-spacing: 0.08em;
 }
 
+/* Monitor-frame carousel: one landscape screenshot at a time inside a monitor bezel + stand. */
+.project-preview__media--monitor {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.2vw, 1.1rem);
+  min-height: clamp(420px, 45vw, 700px);
+}
+
+.monitor-carousel__viewport {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.monitor-frame-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: clamp(500px, 74vw, 1020px);
+}
+
+.monitor-frame {
+  position: relative;
+  width: 100%;
+  /* ~2.1:1 widescreen + thin top/side bezels + slightly thicker chin */
+  aspect-ratio: 2400 / 1220;
+  padding: clamp(7px, 0.9vw, 13px) clamp(7px, 0.9vw, 13px) clamp(22px, 2.6vw, 36px);
+  border: 0;
+  border-radius: clamp(6px, 0.7vw, 11px);
+  background: linear-gradient(160deg, #2c2c2f 0%, #1c1c1f 45%, #0e0e11 100%);
+  box-shadow:
+    0 0 0 1px rgba(252, 240, 218, 0.13),
+    0 28px 60px -18px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.monitor-frame:hover,
+.monitor-frame:focus-visible {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(252, 240, 218, 0.26),
+    0 36px 70px -20px rgba(0, 0, 0, 0.92);
+  outline: none;
+}
+
+/* Power LED dot in the chin */
+.monitor-frame__led {
+  position: absolute;
+  bottom: clamp(7px, 0.85vw, 12px);
+  left: 50%;
+  z-index: 2;
+  width: clamp(4px, 0.4vw, 6px);
+  height: clamp(4px, 0.4vw, 6px);
+  border-radius: 50%;
+  background: #2a2a2d;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.monitor-frame__screen {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(2px, 0.2vw, 3px);
+  background: #0b0b0d;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.monitor-frame__neck {
+  width: 7%;
+  height: clamp(16px, 2.2vw, 32px);
+  background: linear-gradient(180deg, #1e1e21 0%, #141416 100%);
+}
+
+.monitor-frame__base {
+  width: 36%;
+  height: clamp(5px, 0.65vw, 9px);
+  background: linear-gradient(180deg, #252528 0%, #1a1a1d 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(252, 240, 218, 0.08);
+}
+
 .project-lightbox {
   position: fixed;
   inset: 0;
@@ -1065,7 +1155,7 @@ body[data-slide="0"] .landing {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: min(1600px, 95vw);
+  max-width: min(2080px, 95vw);
   max-height: 92vh;
   margin: 0;
 }
