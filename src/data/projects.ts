@@ -1,23 +1,47 @@
+// Auto-discover FratTrack phone screenshots: drop any number of image files
+// into src/assets/frattrack/ and they appear in the carousel, ordered by the
+// number in their filename (frattrack-1, frattrack-2, ... frattrack-10, ...).
+const frattrackScreens = import.meta.glob(
+  "../assets/frattrack/*.{png,jpg,jpeg,webp}",
+  { eager: true, as: "url" }
+) as Record<string, string>;
+
+const frattrackImages = Object.entries(frattrackScreens)
+  .sort(([a], [b]) => {
+    const numberOf = (path: string) => Number(path.match(/(\d+)(?=\.\w+$)/)?.[1] ?? 0);
+    return numberOf(a) - numberOf(b);
+  })
+  .map(([, url]) => url);
+
 export interface Project {
   slug: string;
   name: string;
+  /** Very succinct statement of what the software is, shown above the title. */
+  tagline: string;
   description: string;
   language: string;
   languageColor: string;
   stars: number;
   forks: number;
   topics: string[];
-  githubUrl: string;
+  githubUrl?: string;
+  /** Repo is private: render a "Private Repo" indicator instead of a GitHub link. */
+  isPrivate?: boolean;
+  /** Short development-stage label shown beside the name, e.g. "Mid Development". */
+  status?: string;
   demoUrl?: string;
   images?: string[];
+  /** How `images` are displayed in the carousel. "phone" shows portrait
+   * iPhone-framed screenshots, multiple at a time. Defaults to landscape. */
+  media?: "landscape" | "phone";
   readme: string;
-  year: number;
 }
 
 export const projects: Project[] = [
   {
     slug: "step-ai",
     name: "Step.ai",
+    tagline: "AI agent for the job search",
     description: "An AI career-search agent that turns a user's resume, goals, job list, and networking contacts into ranked opportunities and prioritized next steps. Step.ai parses resume PDFs with a Llama-backed JSON extractor, generates Cohere embeddings through Oracle Generative AI, stores career data in an Oracle AI-enabled database, and uses semantic matching plus pacing logic to recommend applications, outreach, follow-ups, and insights in real time.",
     language: "Next.js / Oracle 23ai / AI Agents",
     languageColor: "#3178c6",
@@ -59,12 +83,12 @@ The main agent loop collects user data, generates missing embeddings, ranks jobs
 - Server-Sent Events
 - Zustand
 - Tailwind CSS
-`,
-    year: 2026
+`
   },
   {
     slug: "scopeplus",
     name: "ScopePlus",
+    tagline: "Gradescope feedback generator and AI tutor",
     description: "An AI-powered Gradescope companion that uses a Chrome extension to scan assignments and generate targeted feedback, paired with a React/Firebase dashboard for reviewing submissions, asking tutor-style questions, and turning feedback into guided study support.",
     language: "React Dashboard / Chrome Extension",
     languageColor: "#f1e05a",
@@ -94,53 +118,84 @@ The Chrome extension connects directly to Gradescope assignment pages, scans ass
 - Tailwind CSS
 - Groq API
 - Claude API
-`,
-    year: 2026
+`
   },
   {
-    // TODO: replace with real project details.
     slug: "frattrack",
     name: "FratTrack",
-    description: "A campus-focused app concept for organizing fraternity events, communication, and member workflows.",
-    language: "Dart",
+    status: "Mid Development",
+    isPrivate: true,
+    tagline: "Campus nightlife, mapped and managed",
+    description: "FratTrack is a campus social app built to make University of Michigan nightlife easier to keep up with. On the member side, you get a live map of parties happening around campus, a friends system, stories and memories, a feed, and a personal QR code that gets you in the door. The fraternity side is for the people running events, giving them a place to create and post parties, manage their member roster, scan guests in at the door, and see how a party actually turned out. Underneath, it runs on Firebase for auth and data, with email and OTP verification during onboarding and Riverpod handling app state.",
+    language: "Flutter / Firebase / Mapbox",
     languageColor: "#00B4AB",
     stars: 0,
     forks: 0,
-    topics: ["flutter", "firebase", "campus"],
-    githubUrl: "https://github.com/Adi-Kaul/frattrack",
+    topics: ["Flutter", "Dart", "Firebase Auth", "Cloud Firestore", "Cloud Functions", "Riverpod", "Mapbox"],
+    media: "phone",
+    images: frattrackImages,
     readme: `# FratTrack
 
-TODO: replace this README with real project notes.
+FratTrack is a campus social app aimed at streamlining University of Michigan social life, making it easier to find what's happening, see who's going, and figure out how to get in.
 
-FratTrack is a mobile-first concept for making fraternity logistics easier to manage and easier for members to follow.
-`,
-    year: 2026
+The app has two connected sides. The **member side** is a social home built around a live Mapbox map of parties and events across campus, a friends system, stories and memories, a posts feed, profiles, and a personal QR code used for event entry. Direct messaging keeps conversations in one place.
+
+The **fraternity side** is an organizer toolkit: create and publish parties and events, manage member rosters, scan guests in at the door with QR check-in, and review party analytics to understand turnout.
+
+Authentication runs through Firebase with email/OTP verification and a multi-step onboarding flow. App data is stored in Cloud Firestore, Cloud Functions handle backend logic, and Riverpod manages client state.
+
+> Status: actively in development.
+
+## Stack
+
+- Flutter
+- Dart
+- Firebase Authentication
+- Cloud Firestore
+- Cloud Functions
+- Riverpod (flutter_riverpod)
+- Mapbox (mapbox_maps_flutter)
+- Geolocator
+- qr_flutter
+- Google Fonts
+`
   },
   {
-    // TODO: replace with real project details.
     slug: "personalwebsite",
     name: "Personal Website",
-    description: "A horizontal portfolio built with React, animated routing, and a quiet editorial system.",
-    language: "TypeScript",
+    tagline: "The site you're looking at right now",
+    description: "Yes, this one. Built to feel like me: clean, direct, and a little unconventional. A horizontal carousel of slides instead of a scrolling page, animated routing between sections, and a design that tries to say something without saying too much. Built with React, TypeScript, Framer Motion, and Three.js.",
+    language: "TypeScript / React / Framer Motion",
     languageColor: "#3178c6",
     stars: 4,
     forks: 1,
-    topics: ["portfolio", "react", "motion"],
+    topics: ["React", "TypeScript", "Framer Motion", "Vite", "Three.js", "React Router"],
     githubUrl: "https://github.com/Adi-Kaul/personalwebsite",
     demoUrl: "https://adi-kaul.dev",
+    images: [
+      "/images/personalwebsite-1.png",
+      "/images/personalwebsite-2.png",
+      "/images/personalwebsite-3.png",
+      "/images/personalwebsite-4.png",
+      "/images/personalwebsite-5.png"
+    ],
     readme: `# Personal Website
 
-TODO: replace this README with real project notes.
+Yes, this one. The site you are currently reading this on is itself one of the projects.
 
-This project is the home base for Adi Kaul's work, experiments, and current interests.
+The structure is a horizontal carousel of full-viewport slides rather than a standard scrolling page. Each slide is its own section — home, projects, about — and navigating between them uses a custom slide manager that handles snapping, touch, and keyboard input. Clicking into a project or section triggers an animated route transition, with each subpage entering and exiting independently using Framer Motion.
+
+The projects section, about page, and experience timeline are all driven by data files, so adding or updating content doesn't require touching layout code. The phone-frame carousel for FratTrack, for instance, auto-discovers screenshots from a folder and pages them in batches.
 
 ## Stack
 
 - React 18
 - TypeScript
+- Vite
 - Framer Motion
 - Three.js
-`,
-    year: 2026
+- React Router v6
+- CSS custom properties for theming
+`
   }
 ];

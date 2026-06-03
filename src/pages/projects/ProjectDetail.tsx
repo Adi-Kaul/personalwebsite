@@ -31,7 +31,10 @@ export default function ProjectDetail() {
       </Link>
       <div className="page-header">
         <p className="breadcrumb">adi-kaul / {project.name}</p>
-        <h1>{project.name}</h1>
+        <h1>
+          {project.name}
+          {project.status ? <span className="page-header__status">({project.status})</span> : null}
+        </h1>
       </div>
       <div className="project-detail-layout">
         <article>
@@ -54,9 +57,19 @@ export default function ProjectDetail() {
             ))}
           </div>
           <div className="button-row">
-            <a className="text-button" href={project.githubUrl} rel="noreferrer" target="_blank">
-              GitHub
-            </a>
+            {project.isPrivate ? (
+              <span className="text-button text-button--private">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="5" y="11" width="14" height="9" stroke="currentColor" strokeWidth="1.8" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="1.8" />
+                </svg>
+                Private Repo
+              </span>
+            ) : project.githubUrl ? (
+              <a className="text-button" href={project.githubUrl} rel="noreferrer" target="_blank">
+                GitHub
+              </a>
+            ) : null}
             {project.demoUrl ? (
               <a className="text-button" href={project.demoUrl} rel="noreferrer" target="_blank">
                 Live demo
