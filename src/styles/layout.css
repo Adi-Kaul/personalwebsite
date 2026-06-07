@@ -2283,7 +2283,7 @@ body[data-slide="0"] .landing {
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 1.6rem;
+  gap: 3rem;
   padding: 0 var(--space-page-x);
 }
 
@@ -2310,20 +2310,20 @@ body[data-slide="0"] .landing {
   align-items: flex-start;
 }
 
-/* Cell clips to the letter's natural em-square so the push animation is
-   visibly tight — the incoming glyph emerges right at the letter's edge. */
+/* Cell clips to the letter's visual bounds so the push animation feels tight.
+   line-height 1.2 gives ~0.1em of leading top+bottom — enough room for Playfair
+   Display descenders ('y','p') without leaving a visible gap above caps. The
+   clip-path trims the above-cap leading so the top edge is flush to the glyph. */
 .xp-title__cell {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  /* 0.82em ≈ cap-height + descender for Playfair Display at line-height 1.
-     Clips flush to the glyph's visual bounds, no empty padding above/below. */
-  clip-path: inset(0.05em 0 0 0);
+  clip-path: inset(0.1em 0 0 0);
 }
 
 .xp-title__sizer {
   display: inline-block;
-  line-height: 1;
+  line-height: 1.2;
   visibility: hidden;
 }
 
@@ -2336,7 +2336,7 @@ body[data-slide="0"] .landing {
 
 .xp-title__glyph {
   display: block;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 /* The two glyphs in a push swap are stacked in the same box and translated. */
