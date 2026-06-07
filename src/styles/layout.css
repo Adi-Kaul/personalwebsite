@@ -513,6 +513,27 @@ body[data-slide="0"] .landing {
   outline-offset: 0.35rem;
 }
 
+.experience-title-button {
+  display: inline-block;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  text-align: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.experience-title-button:hover {
+  opacity: 0.72;
+  transform: translateX(-0.2rem);
+}
+
+.experience-title-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.35rem;
+}
+
 .project-slide__rule {
   display: block;
   width: 100vw;
@@ -707,9 +728,16 @@ body[data-slide="0"] .landing {
 }
 
 .subpage--experience {
-  --current-slide-bg: var(--slide-4-bg);
-  --current-slide-fg: var(--slide-4-fg);
-  --current-slide-fg-rgb: var(--slide-4-fg-rgb);
+  --xp-bg: #8c1520;
+  --current-slide-bg: var(--xp-bg);
+  --current-slide-fg: #fcf0da;
+  --current-slide-fg-rgb: 252, 240, 218;
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+  background: var(--xp-bg);
 }
 
 .subpage--recently {
@@ -2042,60 +2070,562 @@ body[data-slide="0"] .landing {
   padding-left: 1rem;
 }
 
-.timeline {
+/* ── Experience: the smooth-scrolling "path" ──────────────────── */
+/* Fixed paper + grain backdrop: continuous behind the whole long page,
+   so nothing cuts off at section edges and it never re-paints on scroll. */
+.xp-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--xp-bg);
+}
+
+/* Canvas tooth: fine fractal grain for the paint-speckle, plus a faint woven
+   warp/weft thread grid so the surface reads as primed artist's canvas rather
+   than flat paper. All multiplied into the warm --paper base. */
+.xp-grain {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.06) 0,
+      rgba(0, 0, 0, 0.06) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.06) 0,
+      rgba(0, 0, 0, 0.06) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 4px 4px, 4px 4px, 200px 200px;
+}
+
+.xp-binary {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.xp {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.xp::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.xp-panel {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.3fr);
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 6rem);
+  padding: clamp(3rem, 6vh, 5rem) clamp(4.5rem, 7.5vw, 7rem) clamp(3rem, 6vh, 5rem)
+    clamp(2rem, 6vw, 6rem);
+}
+
+.xp-panel > .xp-panel__text,
+.xp-panel > .xp-panel__media,
+.xp-panel > .xp-intro,
+.xp-row > .xp-panel__text,
+.xp-row > .xp-panel__media {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Center timeline ─────────────────────────────────────────── */
+.xp-timeline {
+  position: relative;
+}
+
+/* The spine spans the timeline; the fill grows with scroll progress. */
+.xp-timeline__line,
+.xp-timeline__fill {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.xp-timeline__line {
+  bottom: 0;
+  background: rgba(var(--current-slide-fg-rgb), 0.22);
+}
+
+.xp-timeline__fill {
+  height: calc(var(--xp-fill, 0) * 100%);
+  background: var(--current-slide-fg);
+  transition: height 0.12s linear;
+}
+
+/* Each row uses a 3-column grid: content | spine | content.
+   The node lives in column 2 in-flow, so text and image are always on the
+   same row and can never slip below each other. */
+.xp-row {
   position: relative;
   display: grid;
-  gap: 2rem;
-  max-width: 980px;
-  margin-top: 2rem;
+  grid-template-columns: 1fr clamp(64px, 7vw, 96px) 1fr;
+  grid-template-rows: auto;
+  align-items: center;
+  padding: clamp(3rem, 7vh, 6rem) clamp(2rem, 5vw, 5rem);
 }
 
-.timeline::before {
-  content: "";
-  position: absolute;
-  top: 0.4rem;
-  bottom: 0.4rem;
-  left: 0.42rem;
-  width: 1px;
-  background: rgba(var(--current-slide-fg-rgb), 0.38);
+/* Normal: text left, node centre, image right. */
+.xp-row > .xp-node         { grid-column: 2; grid-row: 1; justify-self: center; }
+.xp-row > .xp-panel__text  { grid-column: 1; grid-row: 1; justify-self: start; }
+.xp-row > .xp-panel__media { grid-column: 3; grid-row: 1; justify-self: start; }
+
+/* Flip: image left, node centre, text right — both pushed to the right edge. */
+.xp-row--flip > .xp-panel__text  { grid-column: 3; grid-row: 1; justify-self: start; padding-left: clamp(1rem, 3vw, 2.5rem); }
+.xp-row--flip > .xp-panel__media { grid-column: 1; grid-row: 1; justify-self: end; }
+
+.xp-row .xp-frame {
+  max-width: 100%;
 }
 
-.timeline-entry {
-  position: relative;
-  padding-left: 2rem;
-}
-
-.timeline-entry::before {
-  content: "";
-  position: absolute;
-  top: 0.38rem;
-  left: 0;
-  width: 0.86rem;
-  height: 0.86rem;
-  border: 1px solid currentColor;
+/* Node circle on the spine. */
+.xp-node {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 5vw, 66px);
+  height: clamp(48px, 5vw, 66px);
+  padding: 0;
   border-radius: 50%;
-  background: var(--current-slide-bg);
+  cursor: pointer;
+  background: var(--xp-bg);
+  border: 2px solid rgba(var(--current-slide-fg-rgb), 0.45);
+  color: rgba(var(--current-slide-fg-rgb), 0.7);
+  box-shadow: 0 0 0 5px var(--xp-bg);
+  transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
 }
 
-.timeline-entry__meta {
+.xp-node__initial {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  line-height: 1;
+}
+
+.xp-node[data-passed="true"] {
+  background: var(--current-slide-fg);
+  border-color: var(--current-slide-fg);
+  color: var(--xp-bg);
+}
+
+.xp-node[aria-current="true"] {
+  transform: scale(1.12);
+}
+
+.xp-node:focus-visible {
+  outline: 2px solid var(--current-slide-fg);
+  outline-offset: 4px;
+}
+
+/* Narrow screens: single column, spine on the left. */
+@media (max-width: 760px) {
+  .xp-timeline__line,
+  .xp-timeline__fill {
+    left: 1.7rem;
+  }
+
+  .xp-row,
+  .xp-row--flip {
+    grid-template-columns: clamp(48px, 10vw, 64px) 1fr;
+    grid-template-rows: auto auto;
+    padding-left: 0;
+    column-gap: 1rem;
+    row-gap: 1.5rem;
+  }
+
+  .xp-row > .xp-node,
+  .xp-row--flip > .xp-node        { grid-column: 1; grid-row: 1; justify-self: center; }
+  .xp-row > .xp-panel__text,
+  .xp-row--flip > .xp-panel__text  { grid-column: 2; grid-row: 1; }
+  .xp-row > .xp-panel__media,
+  .xp-row--flip > .xp-panel__media { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* Intro / hero panel */
+.xp-panel--intro {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  color: var(--current-slide-fg);
+}
+
+.xp-intro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.6rem;
+  padding: 0 var(--space-page-x);
+}
+
+/* Animated title */
+.xp-title {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-bottom: 0.45rem;
-  color: rgba(var(--current-slide-fg-rgb), 0.68);
-  font-size: 0.86rem;
-}
-
-.timeline-entry h2 {
+  justify-content: center;
+  gap: 0 0.26em;
+  margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 400;
+  font-weight: 600;
+  font-size: clamp(3.4rem, 13vw, 12rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--current-slide-fg);
 }
 
-.timeline-entry ul {
-  margin: 1rem 0 0;
-  padding-left: 1.1rem;
-  color: rgba(var(--current-slide-fg-rgb), 0.74);
+.xp-title__word {
+  display: inline-flex;
+  white-space: nowrap;
+  /* Align to top so the word baseline sits flush — prevents descender
+     space on one word from vertically nudging the other. */
+  align-items: flex-start;
+}
+
+/* Cell clips to the letter's natural em-square so the push animation is
+   visibly tight — the incoming glyph emerges right at the letter's edge. */
+.xp-title__cell {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  /* 0.82em ≈ cap-height + descender for Playfair Display at line-height 1.
+     Clips flush to the glyph's visual bounds, no empty padding above/below. */
+  clip-path: inset(0.05em 0 0 0);
+}
+
+.xp-title__sizer {
+  display: inline-block;
+  line-height: 1;
+  visibility: hidden;
+}
+
+.xp-title__window {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  text-align: center;
+}
+
+.xp-title__glyph {
+  display: block;
+  line-height: 1;
+}
+
+/* The two glyphs in a push swap are stacked in the same box and translated. */
+.xp-title__glyph--abs {
+  position: absolute;
+  inset: 0;
+}
+
+.xp-intro__cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgba(var(--current-slide-fg-rgb), 0.62);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.xp-intro__cue svg {
+  animation: xp-cue-bob 2s ease-in-out infinite;
+}
+
+@keyframes xp-cue-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+
+/* Experience text column — Role, then Company, then date */
+.xp-panel__text {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 720px;
+}
+
+.xp-panel__text :is(.xp-panel__index, .xp-panel__role, .xp-panel__company,
+.xp-panel__date, .xp-panel__desc),
+.xp-panel__highlights li {
+  transition: color 0.7s ease, border-color 0.7s ease;
+}
+
+.xp-panel__index {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  color: rgba(var(--current-slide-fg-rgb), 0.5);
+  margin-bottom: 0.4rem;
+}
+
+.xp-panel__role {
+  font-family: var(--font-serif);
+  font-size: clamp(3.2rem, 7vw, 6.2rem);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+}
+
+.xp-panel__company {
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  font-weight: 600;
+  color: var(--current-slide-fg);
+}
+
+.xp-panel__date {
+  font-family: var(--font-mono);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: rgba(var(--current-slide-fg-rgb), 0.62);
+}
+
+.xp-panel__desc {
+  margin-top: 1.1rem;
+  max-width: 54ch;
+  font-size: clamp(1.12rem, 1.45vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(var(--current-slide-fg-rgb), 0.82);
+}
+
+.xp-panel__highlights {
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.xp-panel__highlights li {
+  position: relative;
+  padding-left: 1.8rem;
+  font-size: clamp(1.05rem, 1.3vw, 1.22rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(var(--current-slide-fg-rgb), 0.78);
+}
+
+.xp-panel__highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 1.1rem;
+  height: 1px;
+  background: rgba(var(--current-slide-fg-rgb), 0.55);
+}
+
+/* Image column */
+.xp-panel__media {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.xp-frame {
+  width: 77%;
+  max-width: 441px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.18);
+  box-shadow:
+    0 0 0 4px rgba(var(--current-slide-fg-rgb), 0.07),
+    0 24px 56px -18px rgba(0, 0, 0, 0.6);
+}
+
+.xp-frame__screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.xp-frame__screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Right-side rail: a continuous connector that fills as you scroll */
+.xp-rail {
+  position: fixed;
+  right: clamp(1.1rem, 2.6vw, 2.6rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-fixed);
+  display: grid;
+  gap: clamp(2rem, 6vh, 3.6rem);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.xp-rail[data-active="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.xp-rail__line,
+.xp-rail__fill {
+  position: absolute;
+  right: calc(0.3rem - 1px);
+  top: 0.3rem;
+  width: 2px;
+  border-radius: 2px;
+}
+
+.xp-rail__line {
+  bottom: 0.3rem;
+  background: rgba(var(--current-slide-fg-rgb), 0.26);
+  transition: background-color 0.7s ease;
+}
+
+.xp-rail__fill {
+  height: calc(var(--xp-fill, 0) * (100% - 0.6rem));
+  background: var(--current-slide-fg);
+  transition: height 0.18s linear, background-color 0.7s ease;
+}
+
+.xp-rail__node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+}
+
+.xp-rail__year {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: rgba(var(--current-slide-fg-rgb), 0.5);
+  opacity: 0;
+  transform: translateX(-0.4rem);
+  transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
+}
+
+.xp-rail__dot {
+  position: relative;
+  z-index: 1;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.5);
+  background: var(--current-slide-bg);
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.7s ease;
+}
+
+.xp-rail__node:hover .xp-rail__year,
+.xp-rail__node[aria-current="true"] .xp-rail__year {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--current-slide-fg);
+}
+
+.xp-rail__node:hover .xp-rail__dot {
+  border-color: var(--current-slide-fg);
+}
+
+/* Dots the connector has reached become solid — the "physical link" */
+.xp-rail__node[data-passed="true"] .xp-rail__dot {
+  background: var(--current-slide-fg);
+  border-color: var(--current-slide-fg);
+}
+
+.xp-rail__node[aria-current="true"] .xp-rail__dot {
+  transform: scale(1.5);
+}
+
+.xp-rail__node:focus-visible {
+  outline: 2px solid var(--current-slide-fg);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@media (max-width: 880px) {
+  .xp-rail {
+    display: none;
+  }
+
+  .xp-panel {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: clamp(1.5rem, 5vh, 2.5rem);
+    padding: clamp(4.5rem, 12vh, 6rem) var(--space-page-x) clamp(3rem, 8vh, 4rem);
+  }
+
+  .xp-panel__media {
+    order: -1;
+  }
+
+  .xp-frame {
+    max-width: 560px;
+  }
+
+  .xp-panel__text {
+    max-width: none;
+  }
+}
+
+/* ── THE END footer ─────────────────────────────────────────── */
+/* No fixed height — section is as tall as padding + letters. The bottom of the
+   scroll = bottom of the letters = bottom of the viewport when fully scrolled. */
+.xp-end {
+  padding-top: clamp(4rem, 8vh, 8rem);
+}
+
+/* SVG text stretched (preserveAspectRatio:none) to fill the full width and a
+   tall box — so the wordmark is huge, spans left→right, and its baseline at the
+   bottom of the viewBox means the letters sit flush on the viewport bottom. */
+.xp-end__svg {
+  display: block;
+  width: 100%;
+  height: clamp(180px, 44vh, 600px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.xp-end__svg text {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 300px;
+  fill: var(--current-slide-fg);
+  opacity: 0.11;
 }
 
 .recent-groups {

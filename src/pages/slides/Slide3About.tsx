@@ -31,9 +31,11 @@ export default function Slide3About() {
       <SilkGradient className="silk-gradient" preset={CRIMSON_PRESET} slideDataValue="2" />
       <div className="slide__inner">
         <div className="slide__content">
-          <h1 className="hero-title hero-title--home">
-            <span className="hero-title__line hero-title__line--strong">Experience</span>
-          </h1>
+          <button className="experience-title-button" type="button" onClick={openExperience}>
+            <h1 className="hero-title hero-title--home">
+              <span className="hero-title__line hero-title__line--strong">Experience</span>
+            </h1>
+          </button>
           <p className="slide__kicker slide__kicker--home">
             Roles, projects, and the path that shaped my work.
           </p>
