@@ -68,9 +68,10 @@ interface SilkGradientProps {
   style?: CSSProperties;
   preset?: SilkPreset;
   slideDataValue?: string;
+  frozen?: boolean;
 }
 
-export default function SilkGradient({ style, className, preset = BLUE_PRESET, slideDataValue = "0" }: SilkGradientProps) {
+export default function SilkGradient({ style, className, preset = BLUE_PRESET, slideDataValue = "0", frozen = false }: SilkGradientProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -94,6 +95,7 @@ export default function SilkGradient({ style, className, preset = BLUE_PRESET, s
     let frameId = 0;
     let lastFrameTime = 0;
     let hasDrawnFirstFrame = false;
+    let frozenTime: number | null = null;
     let isActiveSlide = document.body.dataset.slide !== undefined ? document.body.dataset.slide === slideDataValue : true;
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -212,7 +214,14 @@ export default function SilkGradient({ style, className, preset = BLUE_PRESET, s
       }
       lastFrameTime = now;
 
-      if (!reduceMotionQuery.matches && now - sharedGradientClock.lastAdvanceAt >= FRAME_INTERVAL) {
+      // When frozen, capture the shared clock once and hold it: the rAF loop
+      // keeps running (so resizes / re-mounts repaint the canvas) but the image
+      // never changes — a still frame of the silk gradient.
+      if (frozen) {
+        if (frozenTime === null) {
+          frozenTime = sharedGradientClock.time;
+        }
+      } else if (!reduceMotionQuery.matches && now - sharedGradientClock.lastAdvanceAt >= FRAME_INTERVAL) {
         sharedGradientClock.time += 0.007 * preset.speed;
         sharedGradientClock.lastAdvanceAt = now;
       }
@@ -222,7 +231,7 @@ export default function SilkGradient({ style, className, preset = BLUE_PRESET, s
         return;
       }
 
-      const time = sharedGradientClock.time;
+      const time = frozen && frozenTime !== null ? frozenTime : sharedGradientClock.time;
       const scale = preset.scale;
       const imageWidth = offscreenCanvas.width;
       const imageHeight = offscreenCanvas.height;

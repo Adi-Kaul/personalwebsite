@@ -1,4 +1,4 @@
-export interface Role {
+﻿export interface Role {
   company: string;
   title: string;
   period: string;
@@ -16,14 +16,23 @@ export interface Role {
 
 export const experience: Role[] = [
   {
-    // TODO: replace with real role.
-    company: "Independent",
-    title: "Designer and Developer",
-    period: "2025 - Present",
-    description: "Building small, useful interfaces across web, automation, and creative tools. Designed and shipped React prototypes with a focus on speed and polish. Created reusable systems for project pages, notes, and personal publishing.",
+    company: "JustAir",
+    title: "Software Engineer",
+    period: "June 2026 – Present",
+    description: "Prototyping a Next.js mobile application that surfaces real-time weather and air quality data through an interactive map interface. Designing custom condition visuals that translate raw environmental data into clear, readable displays for everyday users.",
     highlights: [],
     type: "work",
-    // TODO: replace with a real image for this experience.
+    image: "/images/stepai-1-homescreen.png",
+    bg: "#25212e",
+    fg: "#fcf0da"
+  },
+  {
+    company: "Ross Tech + Consulting",
+    title: "Senior Technical Analyst",
+    period: "2025 - Present",
+    description: "Developed a multi-page React website for a maritime stealth startup, leveraging Framer Motion for scroll-driven animations and Three.js to render interactive 3D vessel models.\n\nResearched competitors and the startup's goals exiting stealth and key target audience to establish a cohesive visual identity, including typography, a color scheme, and a logo.",
+    highlights: [],
+    type: "work",
     image: "/images/stepai-1-homescreen.png",
     bg: "#25212e",
     fg: "#fcf0da"

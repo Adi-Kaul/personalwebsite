@@ -39,6 +39,14 @@ body {
   background: var(--current-slide-bg, var(--color-tan));
 }
 
+/* About page renders a frozen silk gradient canvas portaled into <body> at
+   z-index -1. Both <body> and #root must be transparent so the canvas (which
+   paints behind in-flow backgrounds) shows through. */
+body:has(.subpage--about),
+body:has(.subpage--about) #root {
+  background: transparent;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 0;

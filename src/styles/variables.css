@@ -88,6 +88,10 @@ body[data-slide="3"] {
    body/#root backdrop crimson while it's mounted so the teal slide-4 backdrop
    doesn't flash through during the fade. Scoped via :has so it never affects
    the home carousel's teal "Interests" slide, which shares data-slide="3". */
+body:has(.subpage--about) {
+  --current-slide-bg: #052337;
+}
+
 body:has(.subpage--experience) {
   --current-slide-bg: #8c1520;
 }

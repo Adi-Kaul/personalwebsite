@@ -51,12 +51,17 @@ export default function BinaryShade() {
     cx.textBaseline = "top";
 
     let lastT = 0;
+    let startT = -1;
+    const FILL_DURATION = 2200; // ms — how long the diagonal sweep takes
 
     function draw(t: number) {
       raf = requestAnimationFrame(draw);
       // ~12 fps — the waves are slow, nobody notices the difference.
       if (t - lastT < 82) return;
       lastT = t;
+
+      if (startT < 0) startT = t;
+      const progress = Math.min(1, (t - startT) / FILL_DURATION);
 
       cx.clearRect(0, 0, w, h);
       cx.font = `${FS}px monospace`;
@@ -69,17 +74,25 @@ export default function BinaryShade() {
         const ny = r / rows;
         for (let c = 0; c < cols; c++) {
           const nx = c / cols;
+
+          // Diagonal fill-in: soft edge sweeps top-left → bottom-right.
+          // reveal=0 (not yet reached) → 1 (fully in) over a 0.18-wide frontier.
+          const diag = (nx + ny) / 2;
+          const reveal = progress >= 1 ? 1 : Math.max(0, Math.min(1, (progress - diag) / 0.06 + 1));
+          if (reveal === 0) continue;
+
           const wave =
             Math.sin(nx * 3.1 + ts * 0.9) * 0.28 +
             Math.sin(ny * 2.7 - ts * 0.7) * 0.28 +
             Math.sin((nx + ny) * 4.4 + ts * 0.4) * 0.22 +
             Math.sin((nx * 1.6 - ny * 2.3) * 3.2 - ts * 0.5) * 0.22;
 
-          if (wave > 0.08) {
-            const bi = Math.min(N_BUCKETS - 1, Math.floor((wave - 0.08) / 0.92 * N_BUCKETS));
+          const w = wave * reveal;
+          if (w > 0.08) {
+            const bi = Math.min(N_BUCKETS - 1, Math.floor((w - 0.08) / 0.92 * N_BUCKETS));
             lightBuckets[bi].push({ x: c * FS, y: r * FS, ch: cellChar(c, r) });
-          } else if (wave < -0.08) {
-            const bi = Math.min(N_BUCKETS - 1, Math.floor((-wave - 0.08) / 0.92 * N_BUCKETS));
+          } else if (w < -0.08) {
+            const bi = Math.min(N_BUCKETS - 1, Math.floor((-w - 0.08) / 0.92 * N_BUCKETS));
             darkBuckets[bi].push({ x: c * FS, y: r * FS, ch: cellChar(c, r) });
           }
         }

@@ -10,7 +10,7 @@ type Effect = "left" | "right" | "top" | "bottom";
 // replace the other. No fade, no fill. Directions rotate top → left → bottom →
 // right so adjacent letters never share the same motion. Ids run left→right,
 // skipping the space: M0 y1  E2 x3 p4 e5 r6 i7 e8 n9 c10 e11
-const ROTATION: Effect[] = ["top", "left", "bottom", "right"];
+const ROTATION: Effect[] = ["left", "right"];
 const EFFECTS: Record<number, Effect> = Object.fromEntries(
   Array.from({ length: 12 }, (_, id) => [id, ROTATION[id % ROTATION.length]])
 );
@@ -43,11 +43,11 @@ export default function ExperienceTitle() {
       }
       lastId = id;
       setReplay({ id, nonce });
-      // Randomised gap (~4–7s) so the rhythm never feels mechanical.
-      timer = window.setTimeout(tick, 4000 + Math.random() * 3000);
+      // Randomised gap (~12–22s) so the letters feel like rare glitches.
+      timer = window.setTimeout(tick, 12000 + Math.random() * 10000);
     };
     // Wait for the load fade to settle before the first reformation.
-    timer = window.setTimeout(tick, 4000);
+    timer = window.setTimeout(tick, 8000);
     return () => window.clearTimeout(timer);
   }, [reduced, animatedIds]);
 
@@ -121,7 +121,7 @@ const PUSH: Record<Effect, { axis: "x" | "y"; enter: string; exit: string }> = {
   bottom: { axis: "y", enter: "100%", exit: "-100%" } // in from bottom, old → top
 };
 
-const PUSH_TRANSITION = { duration: 0.62, ease: [0.65, 0, 0.35, 1] as const };
+const PUSH_TRANSITION = { duration: 1.1, ease: [0.95, 0, 0.5, 1] as const };
 
 function renderEffect(effect: Effect, char: string, reduced: boolean, key: number) {
   return <PushSwap key={key} char={char} reduced={reduced} effect={effect} />;

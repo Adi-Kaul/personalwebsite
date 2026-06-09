@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import LandingBackLink from "../components/LandingBackLink";
+import SilkGradient from "../components/SilkGradient";
 
 const reveal = {
   initial: { opacity: 0, y: 30 },
@@ -88,6 +90,21 @@ export default function AboutPage() {
   }, []);
 
   return (
+    <>
+    {createPortal(
+      <SilkGradient
+        frozen
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+        }}
+      />,
+      document.body
+    )}
     <motion.main
       animate={{ opacity: 1, y: 0 }}
       className="subpage subpage--about"
@@ -249,5 +266,6 @@ export default function AboutPage() {
         </div>
       </motion.section>
     </motion.main>
+    </>
   );
 }

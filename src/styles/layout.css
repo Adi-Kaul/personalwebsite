@@ -722,9 +722,11 @@ body[data-slide="0"] .landing {
 }
 
 .subpage--about {
-  --current-slide-bg: var(--slide-1-bg);
-  --current-slide-fg: var(--slide-1-fg);
-  --current-slide-fg-rgb: var(--slide-1-fg-rgb);
+  --about-bg: #052337;
+  --current-slide-bg: var(--about-bg);
+  --current-slide-fg: #fcf0da;
+  --current-slide-fg-rgb: 252, 240, 218;
+  background: transparent;
 }
 
 .subpage--experience {
@@ -2193,9 +2195,10 @@ body[data-slide="0"] .landing {
 }
 
 /* Normal: text left, node centre, image right. */
-.xp-row > .xp-node         { grid-column: 2; grid-row: 1; justify-self: center; }
-.xp-row > .xp-panel__text  { grid-column: 1; grid-row: 1; justify-self: start; }
-.xp-row > .xp-panel__media { grid-column: 3; grid-row: 1; justify-self: start; }
+.xp-row > .xp-node                        { grid-column: 2; grid-row: 1; justify-self: center; }
+.xp-row:not(.xp-row--flip) > .xp-panel__text { grid-column: 1; grid-row: 1; justify-self: stretch; max-width: none; margin-left: 18%; padding-right: clamp(1rem, 3vw, 2.5rem); }
+.xp-row:not(.xp-row--flip) .xp-panel__desc { max-width: none; }
+.xp-row > .xp-panel__media                { grid-column: 3; grid-row: 1; justify-self: start; }
 
 /* Flip: image left, node centre, text right — both pushed to the right edge. */
 .xp-row--flip > .xp-panel__text  { grid-column: 3; grid-row: 1; justify-self: start; padding-left: clamp(1rem, 3vw, 2.5rem); }
@@ -2318,7 +2321,7 @@ body[data-slide="0"] .landing {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  clip-path: inset(0.1em 0 0 0);
+  clip-path: inset(0.15em 0 0 0);
 }
 
 .xp-title__sizer {
@@ -2330,7 +2333,7 @@ body[data-slide="0"] .landing {
 .xp-title__window {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
   text-align: center;
 }
 
@@ -2415,6 +2418,7 @@ body[data-slide="0"] .landing {
   font-size: clamp(1.12rem, 1.45vw, 1.4rem);
   font-weight: 400;
   line-height: 1.6;
+  white-space: pre-line;
   color: rgba(var(--current-slide-fg-rgb), 0.82);
 }
 
@@ -2444,6 +2448,7 @@ body[data-slide="0"] .landing {
   height: 1px;
   background: rgba(var(--current-slide-fg-rgb), 0.55);
 }
+
 
 /* Image column */
 .xp-panel__media {
