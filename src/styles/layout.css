@@ -715,6 +715,9 @@ body[data-slide="0"] .landing {
   height: 100vh;
   overflow: hidden;
   background: #0d1117;
+  /* Reclaim vertical room on short (laptop) viewports so nothing is clipped. */
+  padding-top: clamp(2rem, 5vh, 4rem);
+  padding-bottom: clamp(2rem, 5vh, 4rem);
 }
 
 .subpage--project-detail {
@@ -785,7 +788,7 @@ body[data-slide="0"] .landing {
 }
 
 .projects-showcase {
-  height: calc(100vh - (var(--space-page-y) * 1.25));
+  height: calc(100vh - 2 * clamp(2rem, 5vh, 4rem));
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(360px, 0.42fr) minmax(0, 1.08fr);
@@ -868,9 +871,11 @@ body[data-slide="0"] .landing {
 
 .project-preview {
   display: grid;
+  /* Anchor to the top so extra vertical room falls BELOW the text, and use a
+     generous gap to push the blurb clear of the monitor stand. */
   align-self: start;
-  gap: clamp(1.2rem, 2.4vw, 2rem);
-  transform: translateY(clamp(-4.5rem, -6vh, -2rem));
+  gap: clamp(2rem, 6vh, 4rem);
+  min-height: 0;
 }
 
 .project-preview__media {
@@ -999,13 +1004,15 @@ body[data-slide="0"] .landing {
    The block reserves the same height as the landscape carousel so the title,
    description, and tags below line up with the other projects. */
 .project-preview__media--phones {
-  --phone-gap: clamp(3rem, 6vw, 6rem);
+  --phone-gap: clamp(1.5rem, 4vw, 4rem);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(0.5rem, 1.2vw, 1.1rem);
-  min-height: clamp(420px, 45vw, 700px);
+  min-height: 0;
+  /* Cap by viewport height so phones shrink on short screens (no scroll). */
+  height: min(clamp(320px, 40vw, 680px), 48vh);
 }
 
 .phone-carousel__viewport {
@@ -1031,8 +1038,10 @@ body[data-slide="0"] .landing {
   flex: 0 1 calc(
     (100% - (var(--phones-per-view, 3) - 1) * var(--phone-gap)) / var(--phones-per-view, 3)
   );
-  max-width: clamp(180px, 19vw, 300px);
-  max-height: 100%;
+  /* Width is the ONLY size constraint; height follows from aspect-ratio, so the
+     frame never distorts and the full screenshot is always shown. The vh term
+     keeps phones inside the available height on short (laptop) screens. */
+  max-width: min(clamp(180px, 19vw, 300px), calc(48vh * 0.461));
   aspect-ratio: 1179 / 2556;
   padding: clamp(4px, 0.5vw, 7px);
   border: 0;
@@ -1113,7 +1122,11 @@ body[data-slide="0"] .landing {
   align-items: center;
   justify-content: center;
   gap: clamp(0.5rem, 1.2vw, 1.1rem);
-  min-height: clamp(420px, 45vw, 700px);
+  min-height: 0;
+  /* Cap by viewport height so the monitor shrinks on short screens (no scroll).
+     The container is taller than the screen+stand so the stand never bleeds into
+     the text below it. */
+  height: min(clamp(320px, 40vw, 700px), 50vh);
 }
 
 .monitor-carousel__viewport {
@@ -1129,7 +1142,10 @@ body[data-slide="0"] .landing {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: clamp(500px, 74vw, 1020px);
+  /* Width also bounded by height so the monitor keeps its aspect ratio and fits.
+     44vh sizes the screen near its full previous size, while the 50vh container
+     above leaves room for the stand + a gap to the text below. */
+  max-width: min(clamp(500px, 74vw, 1020px), calc(44vh * 1.967));
 }
 
 .monitor-frame {
@@ -1292,7 +1308,7 @@ body[data-slide="0"] .landing {
 
 .project-preview__body {
   display: grid;
-  gap: clamp(0.75rem, 1.2vw, 1rem);
+  gap: clamp(0.5rem, 1vh, 0.9rem);
   max-width: 1040px;
 }
 
@@ -1306,7 +1322,9 @@ body[data-slide="0"] .landing {
 
 .project-preview h2 {
   font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 4.2vw, 4.4rem);
+  /* Lower middle (vw) term shrinks the title on narrow laptop screens to save
+     vertical room, while the rem cap keeps it full-size on wide monitors. */
+  font-size: clamp(1.9rem, 3.4vw, 4.4rem);
   font-weight: 400;
   line-height: 0.95;
 }
@@ -1315,7 +1333,7 @@ body[data-slide="0"] .landing {
   color: rgba(var(--current-slide-fg-rgb), 0.74);
   max-width: 90ch;
   font-size: clamp(0.92rem, 1.16vw, 1.06rem);
-  line-height: 1.85;
+  line-height: 1.55;
 }
 
 .project-preview__heading + p {
@@ -1376,13 +1394,13 @@ body[data-slide="0"] .landing {
 .project-preview__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .project-preview__topics .tag-pill {
-  min-height: 30px;
-  padding: 0 0.75rem;
-  font-size: 15px;
+  min-height: 26px;
+  padding: 0 0.65rem;
+  font-size: 13.5px;
 }
 
 .project-preview__actions {
