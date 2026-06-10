@@ -29,7 +29,7 @@ export const experience: Role[] = [
   {
     company: "Ross Tech + Consulting",
     title: "Senior Technical Analyst",
-    period: "2025 - Present",
+    period: "February 2026 – May 2026",
     description: "Developed a multi-page React website for a maritime stealth startup, leveraging Framer Motion for scroll-driven animations and Three.js to render interactive 3D vessel models.\n\nResearched competitors and the startup's goals exiting stealth and key target audience to establish a cohesive visual identity, including typography, a color scheme, and a logo.",
     highlights: [],
     type: "work",
@@ -39,10 +39,10 @@ export const experience: Role[] = [
   },
   {
     // TODO: replace with real role.
-    company: "Studio Project",
-    title: "Product Builder",
-    period: "2024 - 2025",
-    description: "Explored product ideas from sketches through working front-end prototypes. Turned fuzzy ideas into testable workflows, balancing visual design, code quality, and practical shipping constraints.",
+    company: "Ross Tech + Consulting",
+    title: "Technical Analyst",
+    period: "October 2025 – December 2025",
+    description: "Built out the functionality of a UI wireframe for a prototype streaming platform, enabling the startup to go to market. Migrated 50+ videos to MUX and integrated the API for ad-free streaming.\n\n Implemented a Firebase-powered feedback loop for user content. Redesigned front-end sections using HTML and Tailwind CSS and resolved visual bugs to streamline the overall experience.",
     highlights: [],
     type: "project",
     // TODO: replace with a real image for this experience.
@@ -52,10 +52,10 @@ export const experience: Role[] = [
   },
   {
     // TODO: replace with real education entry.
-    company: "Learning Track",
-    title: "Computer Science and Design",
-    period: "2023 - 2024",
-    description: "Focused on interface design, software fundamentals, and product thinking. Studied front-end systems, visual hierarchy, and interaction patterns that now inform every project I ship.",
+    company: "Arizon Systems",
+    title: "Research Intern",
+    period: "January 2024 – April 2024",
+    description: "Researched AI implementations for pharmaceutical shop floor production and enterprise software. Analyzed and cross-compared competing enterprise and shop floor applications through written reports. Produced digital visuals and graphics outlining the defining characteristics of competing software.",
     highlights: [],
     type: "education",
     // TODO: replace with a real image for this experience.
