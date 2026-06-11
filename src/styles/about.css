@@ -1,0 +1,546 @@
+/* ============================================================
+   About ("I'm Adi") page — deep-water redesign.
+   GSAP drives entrances/scroll; everything here animates only
+   transform/opacity/clip-path so the page stays compositor-bound.
+   ============================================================ */
+
+.subpage--about {
+  position: relative;
+  padding: 0;
+  overflow-x: clip;
+}
+
+/* ---------- Ambient backdrop ---------- */
+
+.ab-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(180deg, #02131e 0%, #052337 46%, #073049 100%);
+}
+
+.ab-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.ab-orb--1 {
+  top: -18%;
+  left: -12%;
+  width: 62vw;
+  height: 62vw;
+  background: radial-gradient(circle, rgba(15, 90, 130, 0.55) 0%, rgba(15, 90, 130, 0) 68%);
+}
+
+.ab-orb--2 {
+  right: -16%;
+  bottom: -22%;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(120, 220, 235, 0.14) 0%, rgba(120, 220, 235, 0) 66%);
+}
+
+.ab-orb--3 {
+  top: 28%;
+  left: 30%;
+  width: 54vw;
+  height: 54vw;
+  background: radial-gradient(circle, rgba(8, 52, 92, 0.6) 0%, rgba(8, 52, 92, 0) 70%);
+}
+
+.ab-contour {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+}
+
+.ab-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 42%, transparent 52%, rgba(2, 12, 20, 0.5) 100%);
+}
+
+.ab-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+.ab-hero,
+.ab-build,
+.ab-skills,
+.ab-int {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Hero ---------- */
+
+.ab-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(5rem, 10vh, 7rem) var(--space-page-x) 4rem;
+}
+
+.ab-hero__copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: clamp(1.1rem, 2.2vw, 1.7rem);
+  max-width: min(680px, 56vw);
+}
+
+.ab-eyebrow {
+  width: max-content;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.28rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(var(--current-slide-fg-rgb), 0.86);
+}
+
+.ab-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(4.6rem, 11.5vw, 11rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+.ab-title__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.ab-title__word + .ab-title__word {
+  margin-left: 0.26em;
+}
+
+.ab-title__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Leave headroom for serif ascenders/apostrophe inside the clip window. */
+  padding-top: 0.12em;
+  margin-top: -0.12em;
+}
+
+.ab-title__char {
+  display: inline-block;
+  will-change: transform;
+}
+
+.ab-title__char--accent {
+  color: #78dce9;
+}
+
+.ab-intro {
+  max-width: 560px;
+  color: rgba(var(--current-slide-fg-rgb), 0.8);
+  font-size: clamp(1.08rem, 1.6vw, 1.38rem);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.ab-cue {
+  position: absolute;
+  left: var(--space-page-x);
+  bottom: clamp(1.4rem, 4vh, 2.6rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: rgba(var(--current-slide-fg-rgb), 0.72);
+}
+
+.ab-cue__label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- Floating photo constellation ---------- */
+
+.ab-field {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ab-card {
+  position: absolute;
+  will-change: transform;
+}
+
+.ab-card__par,
+.ab-card__float {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.ab-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.34);
+  border-radius: 2px;
+  box-shadow: 0 18px 50px rgba(1, 10, 17, 0.55);
+}
+
+/* Staggered 2x2 composition: the headshot anchors the inner column, the
+   stadium sits higher in the outer column, and the two landscape shots
+   close the cluster below — clear gutters between every pair. */
+.ab-card--headshot {
+  top: 13%;
+  right: 24%;
+  width: clamp(190px, 17vw, 300px);
+  height: calc(clamp(190px, 17vw, 300px) * 1.3);
+  z-index: 2;
+}
+
+.ab-card--stadium {
+  top: 22%;
+  right: 6%;
+  width: clamp(150px, 13vw, 232px);
+  height: calc(clamp(150px, 13vw, 232px) * 1.22);
+}
+
+.ab-card--jelly {
+  top: 62%;
+  right: 28%;
+  width: clamp(140px, 12vw, 214px);
+  height: calc(clamp(140px, 12vw, 214px) * 0.82);
+}
+
+.ab-card--sea {
+  top: 58%;
+  right: 8%;
+  width: clamp(180px, 15.5vw, 278px);
+  height: calc(clamp(180px, 15.5vw, 278px) * 0.72);
+}
+
+.ab-card--jelly .ab-card__image,
+.ab-card--sea .ab-card__image {
+  aspect-ratio: auto;
+}
+
+/* ---------- Shared section chrome ---------- */
+
+.ab-h2 {
+  margin: 0 0 clamp(2rem, 4.5vw, 3.6rem);
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 5.6vw, 4.8rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ---------- What I like building ---------- */
+
+.ab-build {
+  padding: clamp(6rem, 14vh, 11rem) var(--space-page-x);
+}
+
+.ab-build__copy {
+  display: grid;
+  gap: clamp(1.8rem, 3.4vw, 2.8rem);
+  max-width: 1080px;
+  margin-left: auto;
+}
+
+.ab-build__para {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.5vw, 2.3rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgb(var(--current-slide-fg-rgb));
+}
+
+.ab-word {
+  will-change: opacity;
+}
+
+/* ---------- Skills ---------- */
+
+.ab-skills {
+  padding: clamp(5rem, 12vh, 9rem) var(--space-page-x);
+}
+
+.ab-skills__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ab-skill {
+  position: relative;
+}
+
+.ab-skill__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(var(--current-slide-fg-rgb), 0.32);
+  transform-origin: left center;
+}
+
+.ab-skill__inner {
+  display: grid;
+  grid-template-columns: clamp(3rem, 6vw, 5.5rem) 1fr;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1.1rem, 2.4vw, 1.9rem) 0;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-skill:hover .ab-skill__inner {
+  transform: translateX(clamp(0.6rem, 1.4vw, 1.3rem));
+}
+
+.ab-skill__index {
+  color: rgba(var(--current-slide-fg-rgb), 0.45);
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.ab-skill__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3.4vw, 3.3rem);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.ab-skill:last-child::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(var(--current-slide-fg-rgb), 0.32);
+}
+
+/* ---------- Other Interests ---------- */
+
+.ab-int {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.42fr) minmax(0, 0.58fr);
+  align-items: start;
+  gap: clamp(3rem, 6vw, 7rem);
+  padding: clamp(5rem, 12vh, 9rem) var(--space-page-x) clamp(7rem, 16vh, 12rem);
+}
+
+.ab-int__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.ab-int__button {
+  display: grid;
+  grid-template-columns: clamp(2.2rem, 3.4vw, 3.2rem) 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  border: 0;
+  padding: clamp(0.7rem, 1.5vw, 1.05rem) 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.38;
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-int__button:hover {
+  opacity: 0.75;
+  transform: translateX(0.4rem);
+}
+
+.ab-int__button[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.ab-int__num {
+  color: rgba(var(--current-slide-fg-rgb), 0.5);
+  font-size: clamp(0.82rem, 1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.ab-int__button[aria-pressed="true"] .ab-int__num {
+  color: #78dce9;
+}
+
+.ab-int__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.9rem, 3.1vw, 3rem);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.ab-int__caption {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: clamp(1.6rem, 3.2vw, 2.6rem);
+  border-top: 1px solid rgba(var(--current-slide-fg-rgb), 0.28);
+  padding-top: clamp(1.2rem, 2.4vw, 1.8rem);
+}
+
+.ab-int__counter {
+  color: rgba(var(--current-slide-fg-rgb), 0.5);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.ab-int__desc {
+  max-width: 460px;
+  margin: 0;
+  color: rgba(var(--current-slide-fg-rgb), 0.78);
+  font-size: clamp(1rem, 1.25vw, 1.16rem);
+  line-height: 1.6;
+}
+
+.ab-int__frame {
+  position: sticky;
+  top: clamp(4rem, 10vh, 7rem);
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  max-height: 72vh;
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.34);
+  border-radius: 2px;
+  box-shadow: 0 18px 50px rgba(1, 10, 17, 0.5);
+}
+
+.ab-int__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform, clip-path;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1180px) {
+  .ab-hero__copy {
+    max-width: min(620px, 60vw);
+  }
+
+  .ab-card--headshot {
+    right: 20%;
+  }
+
+  .ab-card--jelly {
+    right: 24%;
+  }
+}
+
+@media (max-width: 959px) {
+  .ab-hero {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    padding-top: 7rem;
+    padding-bottom: 5.5rem;
+  }
+
+  .ab-hero__copy {
+    order: 1;
+    max-width: 640px;
+  }
+
+  .ab-field {
+    order: 2;
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .ab-card,
+  .ab-card--headshot,
+  .ab-card--stadium,
+  .ab-card--jelly,
+  .ab-card--sea {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .ab-card--jelly,
+  .ab-card--sea {
+    aspect-ratio: 4 / 3;
+  }
+
+  .ab-cue {
+    display: none;
+  }
+
+  .ab-int {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-int__frame {
+    position: relative;
+    top: auto;
+    order: 2;
+  }
+
+  .ab-build__copy {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 539px) {
+  .ab-title {
+    font-size: clamp(3.6rem, 19vw, 5.4rem);
+  }
+
+  .ab-field {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-skill__inner {
+    grid-template-columns: 2.4rem 1fr;
+  }
+
+  .ab-int__button {
+    grid-template-columns: 2rem 1fr;
+  }
+}
+
+/* Respect reduced motion: no GSAP runs, so just keep everything visible. */
+@media (prefers-reduced-motion: reduce) {
+  .ab-word {
+    opacity: 1 !important;
+  }
+}
