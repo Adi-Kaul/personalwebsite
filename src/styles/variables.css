@@ -101,3 +101,12 @@ body[data-slide="4"] {
   --current-slide-fg-rgb: var(--slide-5-fg-rgb);
   --current-slide-bg: var(--slide-5-bg);
 }
+
+/* Used when a subpage is mounted and the landing is parked (data-slide="-1").
+   Keeps foreground tokens light so the contact footer and dot-nav render
+   correctly on the brief frames when they are visible during navigation. */
+body[data-slide="-1"] {
+  --current-slide-fg: #fcf0da;
+  --current-slide-fg-rgb: 252, 240, 218;
+  --current-slide-bg: #052337;
+}

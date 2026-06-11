@@ -109,7 +109,7 @@ export function useSlideManager({ slideCount }: UseSlideManagerOptions): UseSlid
 
   const animateTo = useCallback(
     (index: number) => {
-      const nextIndex = wrapIndex(index, slideCount);
+      const nextIndex = clampIndex(index, slideCount);
       const previousIndex = currentIndexRef.current;
       const visualIndex =
         index < 0 ? 0 : index >= slideCount ? slideCount + 1 : visualIndexFor(nextIndex);

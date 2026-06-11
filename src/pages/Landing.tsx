@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DotNav from "../components/DotNav";
 import ContactLinks from "../components/ContactLinks";
 import { useSlideManager } from "../hooks/useSlideManager";
@@ -18,6 +18,8 @@ export default function Landing({ isVisible = true, returnToken = 0 }: LandingPr
   const { containerRef, currentIndex, goToSlide } = useSlideManager({
     slideCount: SLIDE_COUNT
   });
+  const currentIndexRef = useRef(currentIndex);
+  currentIndexRef.current = currentIndex;
 
   useEffect(() => {
     function animateReturn() {
@@ -30,6 +32,12 @@ export default function Landing({ isVisible = true, returnToken = 0 }: LandingPr
     window.addEventListener("landing:returning", animateReturn);
     return () => window.removeEventListener("landing:returning", animateReturn);
   }, []);
+
+  useEffect(() => {
+    if (isVisible) {
+      document.body.dataset.slide = String(currentIndexRef.current);
+    }
+  }, [isVisible]);
 
   useEffect(() => {
     if (!isVisible) {

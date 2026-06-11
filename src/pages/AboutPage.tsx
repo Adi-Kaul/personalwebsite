@@ -76,7 +76,7 @@ export default function AboutPage() {
   const selectedInterest = interests[activeInterest];
 
   useEffect(() => {
-    document.body.dataset.slide = "0";
+    document.body.dataset.slide = "-1";
   }, []);
 
   useEffect(() => {
@@ -94,6 +94,7 @@ export default function AboutPage() {
     {createPortal(
       <SilkGradient
         frozen
+        slideDataValue="-1"
         style={{
           position: "fixed",
           inset: 0,

@@ -39,9 +39,6 @@ export default function Slide3About() {
           <p className="slide__kicker slide__kicker--home">
             Roles, projects, and the path that shaped my work.
           </p>
-          <button className="slide__cta" type="button" onClick={openExperience}>
-            Full timeline -&gt;
-          </button>
         </div>
       </div>
     </section>

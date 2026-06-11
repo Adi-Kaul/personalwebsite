@@ -1478,8 +1478,9 @@ body[data-slide="0"] .landing {
 .about-photo-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.24);
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.38);
   border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(5, 35, 55, 0.5), 0 0 0 1px rgba(var(--current-slide-fg-rgb), 0.08);
   background:
     linear-gradient(145deg, rgba(252, 240, 218, 0.15), rgba(37, 33, 46, 0.08)),
     radial-gradient(circle at 24% 22%, rgba(204, 80, 46, 0.36), transparent 30%),
@@ -1691,8 +1692,9 @@ body[data-slide="0"] .landing {
   position: relative;
   overflow: hidden;
   min-height: clamp(440px, 42vw, 680px);
-  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.24);
+  border: 1px solid rgba(var(--current-slide-fg-rgb), 0.38);
   border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(5, 35, 55, 0.5), 0 0 0 1px rgba(var(--current-slide-fg-rgb), 0.08);
   background:
     radial-gradient(circle at 30% 28%, rgba(204, 80, 46, 0.36), transparent 28%),
     radial-gradient(circle at 76% 72%, rgba(36, 90, 82, 0.32), transparent 30%),
