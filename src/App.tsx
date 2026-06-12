@@ -5,7 +5,6 @@ import { AnimatePresence } from "framer-motion";
 import Landing from "./pages/Landing";
 
 const ProjectsPage = lazy(() => import("./pages/projects/ProjectsPage"));
-const ProjectDetail = lazy(() => import("./pages/projects/ProjectDetail"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ExperiencePage = lazy(() => import("./pages/ExperiencePage"));
 const RecentlyPage = lazy(() => import("./pages/RecentlyPage"));
@@ -100,7 +99,6 @@ function AnimatedRoutes() {
             <Suspense fallback={null}>
               <Routes location={location} key={location.pathname}>
                 <Route path="/projects" element={<ProjectsPage />} />
-                <Route path="/projects/:slug" element={<ProjectDetail />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/experience" element={<ExperiencePage />} />
                 <Route path="/recently" element={<RecentlyPage />} />

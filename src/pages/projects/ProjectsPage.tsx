@@ -1,11 +1,54 @@
-import { CSSProperties, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import gsap from "gsap";
 import { projects } from "../../data/projects";
 import LandingBackLink from "../../components/LandingBackLink";
+import PulseField from "../../components/PulseField";
+
+const TITLE_WORDS = ["My", "Projects"];
 
 export default function ProjectsPage() {
   const reducedMotion = useReducedMotion();
+  const showcaseRef = useRef<HTMLElement>(null);
+  // The preview waits for the title/list intro on first load only; hover
+  // swaps afterwards keep their snappy 0.18s crossfade.
+  const introDelay = useRef(0.55);
+  useEffect(() => {
+    introDelay.current = 0;
+  }, []);
+
+  // Entrance choreography: the title words rise out of their masks, the index
+  // rule draws itself, then the project titles stagger in.
+  useLayoutEffect(() => {
+    if (reducedMotion) return undefined;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".projects-title__word", {
+        yPercent: 118,
+        duration: 0.95,
+        ease: "power4.out",
+        stagger: 0.12,
+        delay: 0.08
+      });
+      gsap.from(".project-index__rule", {
+        scaleX: 0,
+        transformOrigin: "left center",
+        duration: 0.9,
+        ease: "power3.out",
+        delay: 0.28
+      });
+      gsap.from(".project-index__row", {
+        opacity: 0,
+        y: 18,
+        duration: 0.6,
+        ease: "power3.out",
+        stagger: 0.07,
+        delay: 0.36
+      });
+    }, showcaseRef);
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
   const [activeSlug, setActiveSlug] = useState(projects[0]?.slug ?? "");
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -95,23 +138,31 @@ export default function ProjectsPage() {
       initial={reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{ duration: reducedMotion ? 0 : 0.24, ease: "easeOut" }}
     >
+      <PulseField />
       <LandingBackLink slideIndex={1} />
-      <section className="projects-showcase" aria-label="My projects">
+      <section className="projects-showcase" aria-label="My projects" ref={showcaseRef}>
         <div className="projects-showcase__list">
-          <h1>My Projects</h1>
+          <h1 className="projects-title" aria-label="My Projects">
+            {TITLE_WORDS.map((word) => (
+              <span className="projects-title__mask" key={word} aria-hidden="true">
+                <span className="projects-title__word">{word}</span>
+              </span>
+            ))}
+          </h1>
           <div className="project-index">
+            <span className="project-index__rule" aria-hidden="true" />
             {projects.map((project) => (
-              <Link
-                aria-current={project.slug === activeProject?.slug ? "true" : undefined}
-                className="project-index__item"
-                key={project.slug}
-                onFocus={() => setActiveSlug(project.slug)}
-                onMouseEnter={() => setActiveSlug(project.slug)}
-                to={`/projects/${project.slug}`}
-              >
-                <span aria-hidden="true" />
-                <strong>{project.name}</strong>
-              </Link>
+              <div className="project-index__row" key={project.slug}>
+                <button
+                  type="button"
+                  aria-pressed={project.slug === activeProject?.slug ? "true" : "false"}
+                  className="project-index__item"
+                  onClick={() => setActiveSlug(project.slug)}
+                >
+                  <span aria-hidden="true" />
+                  <strong>{project.name}</strong>
+                </button>
+              </div>
             ))}
           </div>
         </div>
@@ -124,7 +175,11 @@ export default function ProjectsPage() {
               exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
               initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
               key={activeProject.slug}
-              transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }}
+              transition={{
+                duration: reducedMotion ? 0 : introDelay.current ? 0.45 : 0.18,
+                delay: reducedMotion ? 0 : introDelay.current,
+                ease: "easeOut"
+              }}
             >
               {isMonitorCarousel ? (
                 <div
@@ -138,8 +193,8 @@ export default function ProjectsPage() {
                     onClick={showPreviousImage}
                     aria-label={`Previous ${activeProject.name} screenshot`}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
 
@@ -181,8 +236,8 @@ export default function ProjectsPage() {
                     onClick={showNextImage}
                     aria-label={`Next ${activeProject.name} screenshot`}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M9.5 5.5L16 12l-6.5 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
 
@@ -203,8 +258,8 @@ export default function ProjectsPage() {
                     onClick={showPreviousPhones}
                     aria-label={`Previous ${activeProject.name} screens`}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
 
@@ -250,8 +305,8 @@ export default function ProjectsPage() {
                     onClick={showNextPhones}
                     aria-label={`Next ${activeProject.name} screens`}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M9.5 5.5L16 12l-6.5 6.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
 

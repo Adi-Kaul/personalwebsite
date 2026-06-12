@@ -66,7 +66,6 @@ export default function ContourField() {
 
     function draw(t: number) {
       ctx.clearRect(0, 0, width, height);
-      ctx.lineWidth = 1;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -77,7 +76,8 @@ export default function ContourField() {
       for (let li = 0; li < LEVELS.length; li++) {
         const level = LEVELS[li];
         const index = li % 3 === 1;
-        ctx.strokeStyle = index ? "rgba(120, 220, 235, 0.11)" : "rgba(80, 170, 210, 0.05)";
+        ctx.strokeStyle = index ? "rgba(170, 235, 220, 0.22)" : "rgba(120, 205, 200, 0.11)";
+        ctx.lineWidth = index ? 2.6 : 1.9;
         ctx.beginPath();
 
         for (let r = 0; r < rows - 1; r++) {

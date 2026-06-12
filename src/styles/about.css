@@ -18,7 +18,7 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(180deg, #02131e 0%, #052337 46%, #073049 100%);
+  background: linear-gradient(180deg, #052337 0%, #0a4f6e 52%, #0f6d72 100%);
 }
 
 .ab-orb {
@@ -40,7 +40,7 @@
   bottom: -22%;
   width: 70vw;
   height: 70vw;
-  background: radial-gradient(circle, rgba(120, 220, 235, 0.14) 0%, rgba(120, 220, 235, 0) 66%);
+  background: radial-gradient(circle, rgba(90, 222, 185, 0.18) 0%, rgba(90, 222, 185, 0) 66%);
 }
 
 .ab-orb--3 {
@@ -68,7 +68,7 @@
 .ab-grain {
   position: absolute;
   inset: 0;
-  opacity: 0.08;
+  opacity: 0.16;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;

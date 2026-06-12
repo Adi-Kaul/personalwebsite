@@ -129,7 +129,7 @@ The Chrome extension connects directly to Gradescope assignment pages, scans ass
     status: "Mid Development",
     isPrivate: true,
     tagline: "Campus nightlife, mapped and managed",
-    description: "FratTrack is a campus social app built to make University of Michigan nightlife easier to keep up with. On the member side, you get a live map of parties happening around campus, a friends system, stories and memories, a feed, and a personal QR code that gets you in the door. The fraternity side is for the people running events, giving them a place to create and post parties, manage their member roster, scan guests in at the door, and see how a party actually turned out. Underneath, it runs on Firebase for auth and data, with email and OTP verification during onboarding and Riverpod handling app state.",
+    description: "A campus social app that makes University of Michigan nightlife easier to keep up with. Members get a live map of parties around campus, a friends system, stories and memories, a feed, and a personal QR code that gets them in the door, while fraternities create and post events, manage rosters, scan guests in, and see how a party actually turned out. It runs on Firebase for auth and data, with email and OTP verification and Riverpod handling app state.",
     language: "Flutter / Firebase / Mapbox",
     languageColor: "#00B4AB",
     stars: 0,
