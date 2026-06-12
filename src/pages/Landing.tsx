@@ -20,6 +20,26 @@ export default function Landing({ isVisible = true, returnToken = 0 }: LandingPr
   });
   const currentIndexRef = useRef(currentIndex);
   currentIndexRef.current = currentIndex;
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Keep keyboard focus from wandering into off-screen slides (and clones),
+  // which would otherwise force the browser to scroll the track "half a page"
+  // to reveal the focused element. Only the visible slide stays interactive.
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) {
+      return;
+    }
+
+    const children = Array.from(track.children) as HTMLElement[];
+    // DOM order: [clone, slide0, slide1, slide2, clone]
+    const activeDomIndex = currentIndex + 1;
+
+    children.forEach((child, domIndex) => {
+      const shouldBeInert = !isVisible || domIndex !== activeDomIndex;
+      child.inert = shouldBeInert;
+    });
+  }, [currentIndex, isVisible]);
 
   useEffect(() => {
     function animateReturn() {
@@ -67,7 +87,7 @@ export default function Landing({ isVisible = true, returnToken = 0 }: LandingPr
     >
       <DotNav currentIndex={currentIndex} goToSlide={goToSlide} slideCount={SLIDE_COUNT} />
       <ContactLinks />
-      <div id="slides-track">
+      <div id="slides-track" ref={trackRef}>
         <div className="slide-clone" aria-hidden="true">
           <Slide3About />
         </div>

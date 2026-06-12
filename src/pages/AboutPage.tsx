@@ -119,6 +119,7 @@ const BUILD_PARAGRAPHS = [
 export default function AboutPage() {
   const reducedMotion = useReducedMotion();
   const [activeInterest, setActiveInterest] = useState(0);
+  const [displayedInterest, setDisplayedInterest] = useState(0);
   const mainRef = useRef<HTMLElement | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
   const imageRefs = useRef<Array<HTMLImageElement | null>>([]);
@@ -293,6 +294,7 @@ export default function AboutPage() {
           img.style.zIndex = index === activeInterest ? "2" : "1";
         }
       });
+      setDisplayedInterest(activeInterest);
       return;
     }
 
@@ -322,15 +324,29 @@ export default function AboutPage() {
     );
 
     if (captionRef.current) {
-      gsap.fromTo(
-        captionRef.current,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", delay: 0.15 }
-      );
+      if (reducedMotion) {
+        setDisplayedInterest(activeInterest);
+      } else {
+        // Fade the old description out, swap the text at the midpoint, fade in.
+        gsap
+          .timeline()
+          .to(captionRef.current, {
+            opacity: 0,
+            y: -8,
+            duration: 0.28,
+            ease: "power2.in",
+            onComplete: () => setDisplayedInterest(activeInterest)
+          })
+          .fromTo(
+            captionRef.current,
+            { opacity: 0, y: 12 },
+            { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+          );
+      }
     }
   }, [activeInterest, reducedMotion]);
 
-  const selectedInterest = interests[activeInterest];
+  const selectedInterest = interests[displayedInterest];
 
   return (
     <motion.main

@@ -9,7 +9,9 @@ export default function ContactLinks() {
         <a href="https://www.linkedin.com/in/adi-skaul/" rel="noreferrer" target="_blank">
           LinkedIn
         </a>
-        <a href="/resume.pdf">Resume</a>
+        <a href="/resume.pdf" rel="noreferrer" target="_blank">
+          Resume
+        </a>
       </div>
     </div>
   );
