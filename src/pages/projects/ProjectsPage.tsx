@@ -172,7 +172,11 @@ export default function ProjectsPage() {
             <motion.aside
               animate={{ opacity: 1 }}
               className="project-preview"
-              exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              exit={
+                reducedMotion
+                  ? { opacity: 1 }
+                  : { opacity: 0, transition: { duration: 0.12, delay: 0, ease: "easeOut" } }
+              }
               initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
               key={activeProject.slug}
               transition={{

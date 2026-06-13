@@ -714,7 +714,7 @@ body[data-slide="0"] .landing {
   position: relative;
   height: 100vh;
   overflow: hidden;
-  background: #110722;
+  background: #0b0416;
   /* Reclaim vertical room on short (laptop) viewports so nothing is clipped. */
   padding-top: clamp(2rem, 5vh, 4rem);
   padding-bottom: clamp(2rem, 5vh, 4rem);

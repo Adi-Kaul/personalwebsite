@@ -52,8 +52,8 @@ export default function PulseField() {
 
     function drawBase() {
       const sky = ctx.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, "#170b29");
-      sky.addColorStop(1, "#0d0618");
+      sky.addColorStop(0, "#100517");
+      sky.addColorStop(1, "#08040f");
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
 
@@ -61,7 +61,7 @@ export default function PulseField() {
         width * 0.82, height * 0.12, 0,
         width * 0.82, height * 0.12, Math.max(width, height) * 0.7
       );
-      ga.addColorStop(0, `rgba(91, 44, 165, ${0.20 * glow.a})`);
+      ga.addColorStop(0, `rgba(91, 44, 165, ${0.15 * glow.a})`);
       ga.addColorStop(1, "rgba(91, 44, 165, 0)");
       ctx.fillStyle = ga;
       ctx.fillRect(0, 0, width, height);
@@ -70,7 +70,7 @@ export default function PulseField() {
         width * 0.08, height * 0.92, 0,
         width * 0.08, height * 0.92, Math.max(width, height) * 0.6
       );
-      gb.addColorStop(0, `rgba(141, 51, 124, ${0.13 * glow.b})`);
+      gb.addColorStop(0, `rgba(141, 51, 124, ${0.1 * glow.b})`);
       gb.addColorStop(1, "rgba(141, 51, 124, 0)");
       ctx.fillStyle = gb;
       ctx.fillRect(0, 0, width, height);
