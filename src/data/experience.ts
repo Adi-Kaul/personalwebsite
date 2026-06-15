@@ -28,7 +28,7 @@ export const experience: Role[] = [
   },
   {
     company: "Ross Tech + Consulting",
-    title: "Senior Technical Analyst",
+    title: "Senior Technical Analyst",
     period: "February 2026 – May 2026",
     description: "Developed a multi-page React website for a maritime stealth startup, leveraging Framer Motion for scroll-driven animations and Three.js to render interactive 3D vessel models.\n\nResearched competitors and the startup's goals exiting stealth and key target audience to establish a cohesive visual identity, including typography, a color scheme, and a logo.",
     highlights: [],

@@ -1,0 +1,28 @@
+# SPA routing: serve real files/dirs as-is, send everything else to index.html
+# so client-side routes (/projects, /about, …) work on direct load and refresh.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Long-cache the fingerprinted assets (filenames change on each build).
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType application/pdf "access plus 1 week"
+</IfModule>
+
+# Don't cache the HTML entry so new deploys are picked up immediately.
+<IfModule mod_headers.c>
+  <FilesMatch "index\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
