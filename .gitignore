@@ -1,5 +1,6 @@
 node_modules/
 dist/
+site.zip
 .vite/
 vite-dev.log
 vite-dev.err.log
